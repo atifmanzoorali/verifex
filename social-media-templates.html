@@ -1,0 +1,3513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifex — Social Media Template Kit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Design Tokens ── */
+    :root {
+      --bg:             #F0ECE3;
+      --surface:        #FFFFFF;
+      --surface-muted:  #F7F4EE;
+      --border:         #D9D3C5;
+      --border-strong:  #B8B0A0;
+      --text-primary:   #111111;
+      --text-secondary: #555047;
+      --text-muted:     #8A8278;
+      --primary:        #1A7A78;
+      --primary-hover:  #155E5C;
+      --cream:          #E2DDD0;
+      --teal-light:     #5BBFBE;
+      --yellow:         #C9B827;
+      --green:          #7A9638;
+      --ink:            #111111;
+
+      /* Template colour variants */
+      --v-dark-bg:      #111111;
+      --v-dark-text:    #F0ECE3;
+      --v-dark-accent:  #5BBFBE;
+      --v-dark-muted:   #555047;
+
+      --v-teal-bg:      #1A7A78;
+      --v-teal-text:    #FFFFFF;
+      --v-teal-accent:  #FFFFFF;
+      --v-teal-muted:   rgba(255,255,255,0.55);
+
+      --v-cream-bg:     #E2DDD0;
+      --v-cream-text:   #111111;
+      --v-cream-accent: #1A7A78;
+      --v-cream-muted:  #8A8278;
+
+      --v-white-bg:     #FFFFFF;
+      --v-white-text:   #111111;
+      --v-white-accent: #1A7A78;
+      --v-white-muted:  #8A8278;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      background: var(--ink);
+      color: #F0ECE3;
+      padding: 56px 64px 48px;
+      border-bottom: 1px solid #222;
+    }
+    .page-header .phase-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      border: 1px solid #1A7A78;
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .page-header h1 {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .page-header p {
+      font-size: 15px;
+      color: #8A8278;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+    .page-header .meta-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid #222;
+    }
+    .page-header .meta-item .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #555047;
+      margin-bottom: 4px;
+    }
+    .page-header .meta-item .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #F0ECE3;
+    }
+
+    /* ── Section wrapper ── */
+    .section {
+      padding: 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+
+    .section-header { margin-bottom: 40px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ── Colour variant strip ── */
+    .variant-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-bottom: 48px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .variant-chip {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .variant-chip.dark  { background: #111111; }
+    .variant-chip.teal  { background: #1A7A78; }
+    .variant-chip.cream { background: #E2DDD0; }
+    .variant-chip.white { background: #FFFFFF; border-right: none; }
+
+    .variant-chip .v-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .variant-chip.dark  .v-name { color: #5BBFBE; }
+    .variant-chip.teal  .v-name { color: rgba(255,255,255,0.6); }
+    .variant-chip.cream .v-name { color: #8A8278; }
+    .variant-chip.white .v-name { color: #8A8278; }
+
+    .variant-chip .v-hex {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+    .variant-chip.dark  .v-hex { color: #F0ECE3; }
+    .variant-chip.teal  .v-hex { color: #FFFFFF; }
+    .variant-chip.cream .v-hex { color: #111111; }
+    .variant-chip.white .v-hex { color: #111111; }
+
+    .variant-chip .v-use {
+      font-size: 12px;
+    }
+    .variant-chip.dark  .v-use { color: #555047; }
+    .variant-chip.teal  .v-use { color: rgba(255,255,255,0.5); }
+    .variant-chip.cream .v-use { color: #8A8278; }
+    .variant-chip.white .v-use { color: #8A8278; }
+
+    /* ── Matrix grid ── */
+    .matrix-labels {
+      display: grid;
+      grid-template-columns: 160px repeat(4, 1fr);
+      gap: 2px;
+      margin-bottom: 2px;
+    }
+    .matrix-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 0 8px 0;
+      text-align: center;
+    }
+    .matrix-label.row-label { text-align: left; }
+
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 160px repeat(4, 1fr);
+      gap: 2px;
+      margin-bottom: 2px;
+    }
+    .matrix-row-label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 16px;
+    }
+    .matrix-row-label .type-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+    .matrix-row-label .type-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ── Template card — base ── */
+    .card {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    /* ── Variant backgrounds ── */
+    .card.dark  { background: #111111; }
+    .card.teal  { background: #1A7A78; }
+    .card.cream { background: #E2DDD0; }
+    .card.white { background: #FFFFFF; outline: 1px solid #D9D3C5; }
+
+    /* ── Logo mark (appears on every card) ── */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .logo-row .wordmark {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: lowercase;
+    }
+    .card.dark  .wordmark { color: rgba(240,236,227,0.5); }
+    .card.teal  .wordmark { color: rgba(255,255,255,0.4); }
+    .card.cream .wordmark { color: #8A8278; }
+    .card.white .wordmark { color: #8A8278; }
+
+    /* ── Bottom row (tagline / URL) ── */
+    .bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .tagline {
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .card.dark  .tagline { color: #555047; }
+    .card.teal  .tagline { color: rgba(255,255,255,0.35); }
+    .card.cream .tagline { color: #B8B0A0; }
+    .card.white .tagline { color: #B8B0A0; }
+
+    .accent-bar { width: 32px; height: 2px; flex-shrink: 0; }
+    .card.dark  .accent-bar { background: #1A7A78; }
+    .card.teal  .accent-bar { background: rgba(255,255,255,0.3); }
+    .card.cream .accent-bar { background: #1A7A78; }
+    .card.white .accent-bar { background: #1A7A78; }
+
+    /* ── CONTENT TYPE 1: Quote / Insight ── */
+    .quote-body { flex: 1; display: flex; align-items: center; padding: 8px 0; }
+    .quote-text {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.4;
+    }
+    .card.dark  .quote-text { color: #F0ECE3; }
+    .card.teal  .quote-text { color: #FFFFFF; }
+    .card.cream .quote-text { color: #111111; }
+    .card.white .quote-text { color: #111111; }
+
+    .quote-text em {
+      font-style: normal;
+    }
+    .card.dark  .quote-text em { color: #5BBFBE; }
+    .card.teal  .quote-text em { color: rgba(255,255,255,0.65); }
+    .card.cream .quote-text em { color: #1A7A78; }
+    .card.white .quote-text em { color: #1A7A78; }
+
+    /* ── CONTENT TYPE 2: Stat Drop ── */
+    .stat-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; }
+    .stat-number {
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-size: 48px;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .card.dark  .stat-number { color: #F0ECE3; }
+    .card.teal  .stat-number { color: #FFFFFF; }
+    .card.cream .stat-number { color: #111111; }
+    .card.white .stat-number { color: #111111; }
+
+    .card.dark  .stat-label { color: #555047; }
+    .card.teal  .stat-label { color: rgba(255,255,255,0.6); }
+    .card.cream .stat-label { color: #555047; }
+    .card.white .stat-label { color: #555047; }
+
+    /* ── CONTENT TYPE 3: Announcement ── */
+    .announce-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; }
+    .announce-eyebrow {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .card.dark  .announce-eyebrow { color: #5BBFBE; }
+    .card.teal  .announce-eyebrow { color: rgba(255,255,255,0.5); }
+    .card.cream .announce-eyebrow { color: #1A7A78; }
+    .card.white .announce-eyebrow { color: #1A7A78; }
+
+    .announce-headline {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .card.dark  .announce-headline { color: #F0ECE3; }
+    .card.teal  .announce-headline { color: #FFFFFF; }
+    .card.cream .announce-headline { color: #111111; }
+    .card.white .announce-headline { color: #111111; }
+
+    .announce-cta {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    .card.dark  .announce-cta { color: #5BBFBE; border-bottom: 1px solid #5BBFBE; }
+    .card.teal  .announce-cta { color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.3); }
+    .card.cream .announce-cta { color: #1A7A78; border-bottom: 1px solid #1A7A78; }
+    .card.white .announce-cta { color: #1A7A78; border-bottom: 1px solid #1A7A78; }
+
+    /* ── CONTENT TYPE 4: Code / Dev Tip ── */
+    .code-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; gap: 8px; }
+    .code-eyebrow {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .card.dark  .code-eyebrow { color: #5BBFBE; }
+    .card.teal  .code-eyebrow { color: rgba(255,255,255,0.5); }
+    .card.cream .code-eyebrow { color: #1A7A78; }
+    .card.white .code-eyebrow { color: #1A7A78; }
+
+    .code-block {
+      padding: 10px 12px;
+      border-radius: 2px;
+      border-left: 2px solid #1A7A78;
+    }
+    .card.dark  .code-block { background: #1A1A1A; }
+    .card.teal  .code-block { background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.3); }
+    .card.cream .code-block { background: #111111; }
+    .card.white .code-block { background: #111111; }
+
+    .code-block pre {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      line-height: 1.6;
+      color: #F0ECE3;
+      white-space: pre;
+    }
+    .code-block pre .kw { color: #5BBFBE; }
+    .code-block pre .str { color: #C9B827; }
+    .card.teal .code-block pre .kw { color: #5BBFBE; }
+
+    .code-caption {
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .card.dark  .code-caption { color: #555047; }
+    .card.teal  .code-caption { color: rgba(255,255,255,0.4); }
+    .card.cream .code-caption { color: #8A8278; }
+    .card.white .code-caption { color: #8A8278; }
+
+    /* ── CONTENT TYPE 5: Milestone / Win ── */
+    .milestone-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; gap: 10px; }
+    .milestone-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .milestone-number {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .card.dark  .milestone-number { color: #F0ECE3; }
+    .card.teal  .milestone-number { color: #FFFFFF; }
+    .card.cream .milestone-number { color: #111111; }
+    .card.white .milestone-number { color: #111111; }
+
+    .milestone-label {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .card.dark  .milestone-label { color: #555047; }
+    .card.teal  .milestone-label { color: rgba(255,255,255,0.6); }
+    .card.cream .milestone-label { color: #555047; }
+    .card.white .milestone-label { color: #555047; }
+
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      width: fit-content;
+    }
+    .card.dark  .milestone-badge { background: #1A7A78; color: #fff; }
+    .card.teal  .milestone-badge { background: rgba(255,255,255,0.15); color: #fff; }
+    .card.cream .milestone-badge { background: #1A7A78; color: #fff; }
+    .card.white .milestone-badge { background: #F0ECE3; color: #1A7A78; border: 1px solid #D9D3C5; }
+
+    /* ── CONTENT TYPE 6: Event / Webinar ── */
+    .event-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0; gap: 8px; }
+    .event-date {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 0;
+      border-bottom: 1px solid;
+      width: fit-content;
+      padding-bottom: 6px;
+      margin-bottom: 2px;
+    }
+    .card.dark  .event-date { color: #5BBFBE; border-color: #1A7A78; }
+    .card.teal  .event-date { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }
+    .card.cream .event-date { color: #1A7A78; border-color: #1A7A78; }
+    .card.white .event-date { color: #1A7A78; border-color: #D9D3C5; }
+
+    .event-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+    .card.dark  .event-title { color: #F0ECE3; }
+    .card.teal  .event-title { color: #FFFFFF; }
+    .card.cream .event-title { color: #111111; }
+    .card.white .event-title { color: #111111; }
+
+    .event-sub {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .card.dark  .event-sub { color: #555047; }
+    .card.teal  .event-sub { color: rgba(255,255,255,0.5); }
+    .card.cream .event-sub { color: #8A8278; }
+    .card.white .event-sub { color: #8A8278; }
+
+    .event-cta {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      width: fit-content;
+      margin-top: 4px;
+    }
+    .card.dark  .event-cta { color: #5BBFBE; }
+    .card.teal  .event-cta { color: rgba(255,255,255,0.7); }
+    .card.cream .event-cta { color: #1A7A78; }
+    .card.white .event-cta { color: #1A7A78; }
+
+    /* ── Logo SVG component ── */
+    svg.logo-icon { flex-shrink: 0; }
+
+    /* ── Best-for badges under matrix ── */
+    .best-for-row {
+      display: grid;
+      grid-template-columns: 160px repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 2px;
+    }
+    .best-for-cell {
+      padding: 8px 0;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+    .best-for-cell.row-spacer { /* empty */ }
+
+    /* ── Usage guide table ── */
+    .usage-table-wrap {
+      margin-top: 48px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .usage-table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .usage-table-wrap thead {
+      background: var(--surface-muted);
+    }
+    .usage-table-wrap th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .usage-table-wrap td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .usage-table-wrap tr:last-child td { border-bottom: none; }
+    .usage-table-wrap td:first-child { font-weight: 600; color: var(--text-primary); }
+
+    .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .dot.dark  { background: #111111; border: 1px solid #555; }
+    .dot.teal  { background: #1A7A78; }
+    .dot.cream { background: #E2DDD0; border: 1px solid #D9D3C5; }
+    .dot.white { background: #FFFFFF; border: 1px solid #D9D3C5; }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 2px;
+      margin: 1px 2px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .tag.best {
+      background: #EAF3F3;
+      color: #1A7A78;
+      border-color: #B8D8D8;
+      font-weight: 700;
+    }
+
+
+    /* ════════════════════════════════
+       PHASE 2 — LINKEDIN
+       ════════════════════════════════ */
+
+    /* ── LinkedIn landscape card (1200×627 → ~1.91:1) ── */
+    .li-landscape {
+      width: 100%;
+      aspect-ratio: 1200 / 627;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 32px;
+    }
+
+    /* ── LinkedIn square card (1080×1080) — reuse .card class ── */
+    .li-square { padding: 24px; }
+
+    /* ── LinkedIn banner (1584×396 → 4:1) ── */
+    .li-banner {
+      width: 100%;
+      aspect-ratio: 1584 / 396;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 48px;
+    }
+    .li-banner .banner-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .li-banner .banner-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .li-banner .banner-wordmark {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+    .li-banner.dark  .banner-wordmark { color: #F0ECE3; }
+    .li-banner.cream .banner-wordmark { color: #111111; }
+
+    .li-banner .banner-tagline {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .li-banner.dark  .banner-tagline { color: #555047; }
+    .li-banner.cream .banner-tagline { color: #8A8278; }
+
+    .li-banner .banner-url {
+      position: absolute;
+      right: 48px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .li-banner.dark  .banner-url { color: #1A7A78; }
+    .li-banner.cream .banner-url { color: #1A7A78; }
+
+    /* ── Landscape card content — larger text ── */
+    .li-landscape .quote-text { font-size: 20px; }
+    .li-landscape .stat-number { font-size: 64px; }
+    .li-landscape .stat-label { font-size: 14px; }
+    .li-landscape .announce-eyebrow { font-size: 10px; }
+    .li-landscape .announce-headline { font-size: 20px; }
+    .li-landscape .announce-cta { font-size: 10px; }
+    .li-landscape .milestone-number { font-size: 52px; }
+    .li-landscape .milestone-label { font-size: 13px; }
+    .li-landscape .event-date { font-size: 11px; }
+    .li-landscape .event-title { font-size: 18px; }
+    .li-landscape .event-sub { font-size: 12px; }
+    .li-landscape .code-eyebrow { font-size: 10px; }
+    .li-landscape .code-block pre { font-size: 11px; }
+    .li-landscape .code-caption { font-size: 11px; }
+    .li-landscape .wordmark { font-size: 13px; }
+    .li-landscape .tagline { font-size: 9px; }
+
+    /* ── Carousel ── */
+    .carousel-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+    .carousel-slide-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .carousel-slide-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    /* Carousel slides are square cards */
+    .carousel-slide {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px;
+    }
+    .carousel-slide .wordmark { font-size: 10px; }
+    .carousel-slide .tagline  { font-size: 7px; }
+    .carousel-slide .accent-bar { width: 24px; height: 2px; }
+
+    /* Carousel cover slide */
+    .slide-cover .cover-hook {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .slide-cover .hook-label {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5BBFBE;
+    }
+    .slide-cover .hook-text {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: #F0ECE3;
+    }
+    .slide-cover .hook-sub {
+      font-size: 9px;
+      font-weight: 500;
+      color: #555047;
+    }
+    .slide-cover .slide-num-badge {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      font-size: 8px;
+      font-weight: 700;
+      color: #555047;
+      letter-spacing: 0.1em;
+    }
+
+    /* Carousel content slides */
+    .slide-content .step-num {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #1A7A78;
+    }
+    .slide-content .step-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 0;
+    }
+    .slide-content .step-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: #111111;
+    }
+    .slide-content .step-desc {
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #555047;
+    }
+    .slide-content .step-tag {
+      display: inline-block;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 2px;
+      background: #EAF3F3;
+      color: #1A7A78;
+      border: 1px solid #B8D8D8;
+      width: fit-content;
+    }
+
+    /* Carousel CTA slide */
+    .slide-cta .cta-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .slide-cta .cta-headline {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: #F0ECE3;
+    }
+    .slide-cta .cta-link {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5BBFBE;
+      border-bottom: 1px solid #1A7A78;
+      width: fit-content;
+      padding-bottom: 2px;
+    }
+
+    /* ── Caption rules ── */
+    .caption-rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2px;
+      margin-top: 48px;
+    }
+    .caption-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 2px;
+    }
+    .caption-card .platform-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .caption-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .caption-card ul li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-left: 14px;
+      position: relative;
+    }
+    .caption-card ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--border-strong);
+      font-weight: 700;
+    }
+    .caption-card ul li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ── Two-column grid for landscape posts ── */
+    .li-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .li-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+    }
+
+    /* ── Sub-section label ── */
+    .subsection {
+      margin-bottom: 48px;
+    }
+    .subsection:last-child { margin-bottom: 0; }
+    .subsection-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .subsection-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .subsection-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+
+    /* ════════════════════════════════
+       PHASE 3 — X (TWITTER)
+       ════════════════════════════════ */
+
+    /* Feed post 1200×675 = 16:9 */
+    .x-post {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px 30px;
+    }
+
+    /* Thread cover — same ratio, different interior */
+    .x-thread-cover {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px 30px;
+    }
+
+    /* Profile banner 1500×500 = 3:1 */
+    .x-banner {
+      width: 100%;
+      aspect-ratio: 1500 / 500;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+    }
+    .x-banner .banner-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .x-banner .banner-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .x-banner .banner-wordmark {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+    .x-banner.dark  .banner-wordmark { color: #F0ECE3; }
+    .x-banner .banner-tagline {
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .x-banner.dark  .banner-tagline { color: #555047; }
+    .x-banner .banner-url {
+      position: absolute;
+      right: 40px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1A7A78;
+    }
+
+    /* Larger text for 16:9 landscape */
+    .x-post .quote-text       { font-size: 18px; }
+    .x-post .stat-number      { font-size: 60px; }
+    .x-post .stat-label       { font-size: 13px; }
+    .x-post .announce-eyebrow { font-size: 10px; }
+    .x-post .announce-headline{ font-size: 18px; }
+    .x-post .announce-cta     { font-size: 10px; }
+    .x-post .code-eyebrow     { font-size: 10px; }
+    .x-post .code-block pre   { font-size: 10px; }
+    .x-post .code-caption     { font-size: 11px; }
+    .x-post .wordmark         { font-size: 12px; }
+    .x-post .tagline          { font-size: 8px; }
+
+    /* Thread cover internals */
+    .thread-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .thread-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #5BBFBE;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .thread-label::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 1.5px;
+      background: #1A7A78;
+    }
+    .thread-hook {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      color: #F0ECE3;
+      max-width: 420px;
+    }
+    .thread-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555047;
+    }
+    .thread-count {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #1A7A78;
+      border: 1px solid #1A7A78;
+      padding: 3px 8px;
+      border-radius: 2px;
+      width: fit-content;
+    }
+
+
+    /* ════════════════════════════════
+       PHASE 4 — INSTAGRAM
+       ════════════════════════════════ */
+
+    /* Portrait feed 1080×1350 = 4:5 */
+    .ig-portrait {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+    }
+    .ig-portrait .quote-text       { font-size: 15px; }
+    .ig-portrait .stat-number      { font-size: 56px; }
+    .ig-portrait .announce-eyebrow { font-size: 9px; }
+    .ig-portrait .announce-headline{ font-size: 17px; }
+
+    /* Story 1080×1920 = 9:16 */
+    .ig-story {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 20px;
+    }
+    .ig-story .wordmark  { font-size: 11px; }
+    .ig-story .tagline   { font-size: 8px; }
+    .ig-story .accent-bar{ width: 28px; height: 2px; }
+
+    /* Story-specific text sizes */
+    .ig-story .quote-text        { font-size: 17px; line-height: 1.4; }
+    .ig-story .stat-number       { font-size: 72px; }
+    .ig-story .stat-label        { font-size: 13px; }
+    .ig-story .announce-eyebrow  { font-size: 9px; }
+    .ig-story .announce-headline { font-size: 18px; }
+    .ig-story .milestone-number  { font-size: 60px; }
+    .ig-story .milestone-label   { font-size: 12px; }
+
+    /* Link-in-bio story content */
+    .lib-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .lib-headline {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      color: #F0ECE3;
+    }
+    .lib-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555047;
+      line-height: 1.5;
+    }
+    .lib-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1A7A78;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border-radius: 2px;
+    }
+
+    /* 4-col grid for stories */
+    .ig-story-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    /* Highlight covers */
+    .ig-highlights-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .ig-highlight-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .ig-highlight-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ig-highlight-circle.teal  { background: #1A7A78; }
+    .ig-highlight-circle.dark  { background: #111111; }
+    .ig-highlight-circle.cream { background: #E2DDD0; }
+    .ig-highlight-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* 3-col grid for portrait */
+    .ig-portrait-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+
+    /* ════════════════════════════════
+       PHASE 5 — PROFILE ASSETS + SPEC
+       ════════════════════════════════ */
+
+    /* Profile photo frame 400×400 */
+    .profile-frame-row {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .profile-frame-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .profile-frame {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .profile-frame.dark-frame  { background: #111111; box-shadow: 0 0 0 3px #1A7A78, 0 0 0 5px #111111; }
+    .profile-frame.teal-frame  { background: #1A7A78; box-shadow: 0 0 0 3px #5BBFBE, 0 0 0 5px #F0ECE3; }
+    .profile-frame.cream-frame { background: #E2DDD0; box-shadow: 0 0 0 3px #1A7A78, 0 0 0 5px #F0ECE3; }
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: #2A2A2A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-frame.teal-frame  .profile-avatar { background: rgba(255,255,255,0.15); }
+    .profile-frame.cream-frame .profile-avatar { background: #D9D3C5; }
+    .profile-frame-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .profile-frame-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* LinkedIn company cover 1128×191 ≈ 5.9:1 */
+    .li-company-cover {
+      width: 100%;
+      aspect-ratio: 1128 / 191;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+    }
+    .li-company-cover .cover-inner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .li-company-cover .divider {
+      width: 1px;
+      height: 28px;
+      background: #333;
+    }
+    .li-company-cover.cream-cover .divider { background: #D9D3C5; }
+    .li-company-cover .cover-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .li-company-cover .cover-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+    }
+    .li-company-cover.dark-cover  .cover-name { color: #F0ECE3; }
+    .li-company-cover.cream-cover .cover-name { color: #111111; }
+    .li-company-cover .cover-tagline {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .li-company-cover.dark-cover  .cover-tagline { color: #555047; }
+    .li-company-cover.cream-cover .cover-tagline { color: #8A8278; }
+    .li-company-cover .cover-url {
+      position: absolute;
+      right: 32px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1A7A78;
+    }
+
+    /* Master spec table */
+    .spec-table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .spec-table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .spec-table-wrap thead th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      background: var(--surface-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-table-wrap td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: middle;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+    .spec-table-wrap tr:last-child td { border-bottom: none; }
+    .spec-table-wrap td:first-child { font-weight: 600; color: var(--text-primary); }
+    .spec-table-wrap .platform-row td {
+      background: var(--surface-muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mono {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+    .variant-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+
+    /* How to use panel */
+    .how-to-use {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+    }
+    .how-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px 24px;
+      border-radius: 2px;
+    }
+    .how-step .step-n {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #E2DDD0;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .how-step .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .how-step .step-body {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Kit footer */
+    .kit-footer {
+      background: var(--ink);
+      padding: 48px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kit-footer .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .kit-footer .footer-wordmark {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: #F0ECE3;
+    }
+    .kit-footer .footer-tagline {
+      font-size: 13px;
+      color: #555047;
+    }
+    .kit-footer .footer-right {
+      text-align: right;
+    }
+    .kit-footer .footer-meta {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555047;
+      line-height: 1.8;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     PAGE HEADER
+     ════════════════════════════════ -->
+<header class="page-header">
+  <div class="phase-tag">Phase 1 of 5 — Foundation &amp; Colour Matrix</div>
+  <h1>Social Media<br>Template Kit</h1>
+  <p>Every content type rendered in every colour variant. Use this as your combination reference before building in Canva or Figma.</p>
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="label">Brand</div>
+      <div class="value">Verifex</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Content Types</div>
+      <div class="value">6</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Colour Variants</div>
+      <div class="value">4</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Total Combinations</div>
+      <div class="value">24</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Phases Built</div>
+      <div class="value">1 / 5</div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════
+     SECTION 1 — COLOUR VARIANTS
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">01 — Colour Variants</div>
+    <div class="section-title">The 4 Template Backgrounds</div>
+    <div class="section-desc">Every template is built in all 4 variants. Choose the variant based on the content type and posting context — not personal preference.</div>
+  </div>
+
+  <div class="variant-strip">
+    <div class="variant-chip dark">
+      <div class="v-name">Dark</div>
+      <div class="v-hex">#111111</div>
+      <div class="v-use">Quotes, insights, strong opinions. Most authoritative variant.</div>
+    </div>
+    <div class="variant-chip teal">
+      <div class="v-name">Teal</div>
+      <div class="v-hex">#1A7A78</div>
+      <div class="v-use">Stats, numbers, bold claims. Primary brand colour — use with intent.</div>
+    </div>
+    <div class="variant-chip cream">
+      <div class="v-name">Cream</div>
+      <div class="v-hex">#E2DDD0</div>
+      <div class="v-use">Announcements, launches, feature reveals. Warm and readable.</div>
+    </div>
+    <div class="variant-chip white">
+      <div class="v-name">White</div>
+      <div class="v-hex">#FFFFFF</div>
+      <div class="v-use">Technical content, dev tips, editorial. Clean and precise.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 2 — TEMPLATE MATRIX
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">02 — Template Matrix</div>
+    <div class="section-title">6 Content Types × 4 Colour Variants</div>
+    <div class="section-desc">All 24 combinations. Each card is 1:1 ratio — the same proportions as an Instagram square or LinkedIn square post. Scan across a row to compare colour variants. Scan down a column to compare content types within one variant.</div>
+  </div>
+
+  <!-- Column headers -->
+  <div class="matrix-labels">
+    <div class="matrix-label row-label"></div>
+    <div class="matrix-label">Dark</div>
+    <div class="matrix-label">Teal</div>
+    <div class="matrix-label">Cream</div>
+    <div class="matrix-label">White</div>
+  </div>
+
+  <!-- ── ROW 1: Quote / Insight ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Quote / Insight</div>
+      <div class="type-desc">Big typography statement. No visuals.</div>
+    </div>
+
+    <!-- Dark -->
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="quote-body">
+        <p class="quote-text">Most tools check <em>format</em>. None tell you if the email <em>works</em>.</p>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <!-- Teal -->
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="quote-body">
+        <p class="quote-text">Most tools check <em>format</em>. None tell you if the email <em>works</em>.</p>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <!-- Cream -->
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="quote-body">
+        <p class="quote-text">Most tools check <em>format</em>. None tell you if the email <em>works</em>.</p>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <!-- White -->
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="quote-body">
+        <p class="quote-text">Most tools check <em>format</em>. None tell you if the email <em>works</em>.</p>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 2: Stat Drop ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Stat Drop</div>
+      <div class="type-desc">Oversized number + one-line label.</div>
+    </div>
+
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="stat-body">
+        <div class="stat-number">23%</div>
+        <div class="stat-label">of email lists decay every year. Silent bounces. Missed leads.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="stat-body">
+        <div class="stat-number">50ms</div>
+        <div class="stat-label">average response time. Format + MX check in a single call.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="stat-body">
+        <div class="stat-number">2.3B</div>
+        <div class="stat-label">invalid emails sent every day. Most bounce silently.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="stat-body">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">uptime SLA. Built for production use, not demos.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 3: Announcement ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Announcement</div>
+      <div class="type-desc">Eyebrow + headline + CTA link.</div>
+    </div>
+
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="announce-body">
+        <div class="announce-eyebrow">New Feature</div>
+        <div class="announce-headline">MX record validation is live. Check if the mail server exists.</div>
+        <span class="announce-cta">Read the docs →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="announce-body">
+        <div class="announce-eyebrow">Open Source</div>
+        <div class="announce-headline">Verifex is live on GitHub. Free to self-host. No rate-limit games.</div>
+        <span class="announce-cta">Star on GitHub →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="announce-body">
+        <div class="announce-eyebrow">Now Live</div>
+        <div class="announce-headline">v1.0 is out. One endpoint. Format, domain, and MX — in a single call.</div>
+        <span class="announce-cta">Try it free →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="announce-body">
+        <div class="announce-eyebrow">Free API</div>
+        <div class="announce-headline">No credit card. No rate-limit on the free tier. Just your API key.</div>
+        <span class="announce-cta">Get started →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 4: Code / Dev Tip ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Code / Dev Tip</div>
+      <div class="type-desc">Code block or numbered step for developer audience.</div>
+    </div>
+
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="code-body">
+        <div class="code-eyebrow">One-line integration</div>
+        <div class="code-block">
+          <pre><span class="kw">const</span> { valid, mx } =
+  <span class="kw">await</span> verifex.check(
+    <span class="str">email</span>
+  )</pre>
+        </div>
+        <div class="code-caption">Format + MX + response in a single awaited call.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev/docs</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="code-body">
+        <div class="code-eyebrow">Dev tip</div>
+        <div class="code-block">
+          <pre><span class="kw">const</span> { valid, mx } =
+  <span class="kw">await</span> verifex.check(
+    <span class="str">email</span>
+  )</pre>
+        </div>
+        <div class="code-caption">Format + MX + response in a single awaited call.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev/docs</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="code-body">
+        <div class="code-eyebrow">Dev tip</div>
+        <div class="code-block">
+          <pre><span class="kw">const</span> { valid, mx } =
+  <span class="kw">await</span> verifex.check(
+    <span class="str">email</span>
+  )</pre>
+        </div>
+        <div class="code-caption">Format + MX + response in a single awaited call.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev/docs</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="code-body">
+        <div class="code-eyebrow">Dev tip</div>
+        <div class="code-block">
+          <pre><span class="kw">const</span> { valid, mx } =
+  <span class="kw">await</span> verifex.check(
+    <span class="str">email</span>
+  )</pre>
+        </div>
+        <div class="code-caption">Format + MX + response in a single awaited call.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">verifex.dev/docs</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 5: Milestone / Win ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Milestone / Win</div>
+      <div class="type-desc">Achievement + context. Used for growth moments.</div>
+    </div>
+
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="milestone-body">
+        <div class="milestone-badge">Milestone</div>
+        <div class="milestone-number">500</div>
+        <div class="milestone-label">GitHub stars in the first week. Built in public. Thank you.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="milestone-body">
+        <div class="milestone-badge">Milestone</div>
+        <div class="milestone-number">1K</div>
+        <div class="milestone-label">API calls processed. Zero downtime. One endpoint.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="milestone-body">
+        <div class="milestone-badge">Milestone</div>
+        <div class="milestone-number">v1.0</div>
+        <div class="milestone-label">Shipped. Open source. Production-ready from day one.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="milestone-body">
+        <div class="milestone-badge">Milestone</div>
+        <div class="milestone-number">100</div>
+        <div class="milestone-label">developers using Verifex in production this month.</div>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 6: Event / Webinar ── -->
+  <div class="matrix-row">
+    <div class="matrix-row-label">
+      <div class="type-name">Event / Webinar</div>
+      <div class="type-desc">Date + title + CTA. Used to drive registrations.</div>
+    </div>
+
+    <div class="card dark">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Thu 26 Jun — 3pm UTC</div>
+        <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+        <div class="event-sub">Live walkthrough — architecture, decisions, lessons.</div>
+        <span class="event-cta">Register free →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card teal">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Thu 26 Jun — 3pm UTC</div>
+        <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+        <div class="event-sub">Live walkthrough — architecture, decisions, lessons.</div>
+        <span class="event-cta">Register free →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card cream">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Thu 26 Jun — 3pm UTC</div>
+        <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+        <div class="event-sub">Live walkthrough — architecture, decisions, lessons.</div>
+        <span class="event-cta">Register free →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+
+    <div class="card white">
+      <div class="logo-row">
+        <svg class="logo-icon" width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/>
+          <polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+        </svg>
+        <span class="wordmark">verifex</span>
+      </div>
+      <div class="event-body">
+        <div class="event-date">Thu 26 Jun — 3pm UTC</div>
+        <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+        <div class="event-sub">Live walkthrough — architecture, decisions, lessons.</div>
+        <span class="event-cta">Register free →</span>
+      </div>
+      <div class="bottom-row">
+        <span class="tagline">Validate once. Trust always.</span>
+        <div class="accent-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Usage guide ── -->
+  <div class="usage-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Content Type</th>
+          <th>Best Variant</th>
+          <th>Avoid</th>
+          <th>Platforms</th>
+          <th>Posting frequency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Quote / Insight</td>
+          <td><span class="dot dark"></span> Dark &nbsp; <span class="dot cream"></span> Cream</td>
+          <td>Teal — too loud for a reflective thought</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag best">X</span><span class="tag">Instagram</span></td>
+          <td>2–3× per week</td>
+        </tr>
+        <tr>
+          <td>Stat Drop</td>
+          <td><span class="dot teal"></span> Teal &nbsp; <span class="dot dark"></span> Dark</td>
+          <td>White — number loses visual weight</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag">Instagram</span><span class="tag">X</span></td>
+          <td>1× per week max</td>
+        </tr>
+        <tr>
+          <td>Announcement</td>
+          <td><span class="dot cream"></span> Cream &nbsp; <span class="dot white"></span> White</td>
+          <td>Dark for launches — feels like bad news</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag best">Instagram</span><span class="tag">X</span></td>
+          <td>When there's news — not on a schedule</td>
+        </tr>
+        <tr>
+          <td>Code / Dev Tip</td>
+          <td><span class="dot dark"></span> Dark &nbsp; <span class="dot white"></span> White</td>
+          <td>Cream or Teal — code is hard to read</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag best">X</span></td>
+          <td>1× per week</td>
+        </tr>
+        <tr>
+          <td>Milestone / Win</td>
+          <td><span class="dot teal"></span> Teal &nbsp; <span class="dot cream"></span> Cream</td>
+          <td>White — too quiet for a win</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag">Instagram</span><span class="tag">X</span></td>
+          <td>Only on real milestones</td>
+        </tr>
+        <tr>
+          <td>Event / Webinar</td>
+          <td><span class="dot dark"></span> Dark &nbsp; <span class="dot cream"></span> Cream</td>
+          <td>White — not enough urgency for an event</td>
+          <td><span class="tag best">LinkedIn</span><span class="tag">Instagram</span></td>
+          <td>3–5× in the week before the event</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     PHASE 2 — LINKEDIN TEMPLATES
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Phase 2 — LinkedIn</div>
+    <div class="section-title">LinkedIn Templates</div>
+    <div class="section-desc">Three formats: Landscape feed post (1200×627), Square post (1080×1080), and Carousel (1080×1080 per slide). Each content type shown at its recommended colour variant.</div>
+  </div>
+
+  <!-- ── SUBSECTION A: Landscape Feed Posts ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">A — Feed Post (Landscape)</span>
+      <span class="subsection-meta">1200 × 627 px &nbsp;·&nbsp; All 6 content types</span>
+    </div>
+    <div class="li-grid-2">
+
+      <!-- Quote — Dark -->
+      <div>
+        <div class="li-landscape card dark">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Most email validation tools check <em>format</em>.<br>None of them tell you if the email actually <em>works</em>.</p>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Quote / Insight — Dark</div>
+      </div>
+
+      <!-- Stat — Teal -->
+      <div>
+        <div class="li-landscape card teal">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">23%</div>
+            <div class="stat-label">of email lists decay every year. Silent bounces. Missed invoices. Lost leads.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">verifex.dev</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Stat Drop — Teal</div>
+      </div>
+
+      <!-- Announcement — Cream -->
+      <div>
+        <div class="li-landscape card cream">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">New Feature</div>
+            <div class="announce-headline">MX record validation is live.<br>Check if the mail server actually exists.</div>
+            <span class="announce-cta">Read the docs →</span>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Announcement — Cream</div>
+      </div>
+
+      <!-- Code Tip — Dark -->
+      <div>
+        <div class="li-landscape card dark">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="code-body">
+            <div class="code-eyebrow">One-line integration</div>
+            <div class="code-block">
+              <pre><span class="kw">const</span> result = <span class="kw">await</span> fetch(<span class="str">'/api/v1/validate'</span>, {
+  method: <span class="str">'POST'</span>,
+  headers: { <span class="str">'X-API-Key'</span>: key },
+  body: JSON.stringify({ email })
+})
+<span class="kw">const</span> { valid, mx, reason } = <span class="kw">await</span> result.json()</pre>
+            </div>
+            <div class="code-caption">Format + MX check in one call. Returns valid, mx, and reason.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">verifex.dev/docs</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Code / Dev Tip — Dark</div>
+      </div>
+
+      <!-- Milestone — Teal -->
+      <div>
+        <div class="li-landscape card teal">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-badge">Milestone</div>
+            <div class="milestone-number">500★</div>
+            <div class="milestone-label">GitHub stars in the first week. Built in public. Thank you.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Milestone / Win — Teal</div>
+      </div>
+
+      <!-- Event — Dark -->
+      <div>
+        <div class="li-landscape card dark">
+          <div class="logo-row">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="event-body">
+            <div class="event-date">Thu 26 Jun — 3 pm UTC</div>
+            <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+            <div class="event-sub">Live walkthrough — architecture, decisions, trade-offs. Free to attend.</div>
+            <span class="event-cta">Register free →</span>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Event / Webinar — Dark</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION B: Square Posts ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">B — Feed Post (Square)</span>
+      <span class="subsection-meta">1080 × 1080 px &nbsp;·&nbsp; Top 3 content types for LinkedIn square</span>
+    </div>
+    <div class="li-grid-3">
+
+      <!-- Quote — Dark -->
+      <div>
+        <div class="card dark li-square" style="aspect-ratio:1/1;">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Format valid.<br>Domain valid.<br>MX record <em>valid</em>.<br><br>That's the difference between<br>hoping and knowing.</p>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Quote — Dark</div>
+      </div>
+
+      <!-- Stat — Teal -->
+      <div>
+        <div class="card teal li-square" style="aspect-ratio:1/1;">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">2.3B</div>
+            <div class="stat-label">invalid emails sent every single day. Most bounce silently. Your list is not immune.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">verifex.dev</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Stat — Teal</div>
+      </div>
+
+      <!-- Announcement — Cream -->
+      <div>
+        <div class="card cream li-square" style="aspect-ratio:1/1;">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">Open Source</div>
+            <div class="announce-headline">Verifex is live on GitHub. Free to self-host. No rate-limit games. No credit card.</div>
+            <span class="announce-cta">Star on GitHub →</span>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Announcement — Cream</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION C: Carousel ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">C — Carousel</span>
+      <span class="subsection-meta">1080 × 1080 px per slide &nbsp;·&nbsp; 4-slide sequence &nbsp;·&nbsp; Up to 10 slides on LinkedIn</span>
+    </div>
+    <div class="carousel-track">
+
+      <!-- Slide 1: Cover / Hook — Dark -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 1 — Cover</div>
+        <div class="carousel-slide card dark slide-cover">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="cover-hook">
+            <div class="hook-label">3 things to check</div>
+            <div class="hook-text">Before you send to any email list.</div>
+            <div class="hook-sub">Most developers skip step 2.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Swipe →</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Step 1 — White -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 2 — Point 1</div>
+        <div class="carousel-slide card white slide-content">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="step-body">
+            <div class="step-num">01</div>
+            <div class="step-title">Format check</div>
+            <div class="step-desc">Is the structure valid? RFC 5322 regex + 254-character length limit. Takes under 1ms.</div>
+            <div class="step-tag">Fast · Local · No network</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">1 of 3</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Step 2 — White -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 3 — Point 2</div>
+        <div class="carousel-slide card white slide-content">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="step-body">
+            <div class="step-num">02</div>
+            <div class="step-title">MX record check</div>
+            <div class="step-desc">Does the domain have a mail server? DNS lookup on the MX record. Most tools skip this entirely.</div>
+            <div class="step-tag">Most skipped · Critical · DNS</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">2 of 3</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: CTA — Dark -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 4 — CTA</div>
+        <div class="carousel-slide card dark slide-cta">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="cta-body">
+            <div class="cta-headline">Verifex does all 3 in a single API call.</div>
+            <span class="cta-link">verifex.dev →</span>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION D: Company Banners ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">D — Company Page Banner</span>
+      <span class="subsection-meta">1584 × 396 px &nbsp;·&nbsp; 2 variants</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <!-- Dark banner -->
+      <div>
+        <div class="li-banner dark" style="background:#111111;">
+          <div class="banner-inner">
+            <div class="banner-logo-row">
+              <svg width="28" height="28" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+              <span class="banner-wordmark">verifex</span>
+            </div>
+            <div class="banner-tagline">Validate once. Trust always.</div>
+          </div>
+          <span class="banner-url">verifex.dev</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Company Banner — Dark</div>
+      </div>
+
+      <!-- Cream banner -->
+      <div>
+        <div class="li-banner cream" style="background:#E2DDD0;">
+          <div class="banner-inner">
+            <div class="banner-logo-row">
+              <svg width="28" height="28" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+              <span class="banner-wordmark">verifex</span>
+            </div>
+            <div class="banner-tagline">Validate once. Trust always.</div>
+          </div>
+          <span class="banner-url">verifex.dev</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Company Banner — Cream</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION E: Caption Rules ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">E — LinkedIn Caption Rules</span>
+      <span class="subsection-meta">What to write in the post body when sharing these templates</span>
+    </div>
+    <div class="caption-rules-grid">
+      <div class="caption-card">
+        <div class="platform-name">Length &amp; Format</div>
+        <ul>
+          <li><strong>Optimal length:</strong> 900–1,300 characters. Long enough to tell the story, short enough to hold attention.</li>
+          <li><strong>First line is the hook.</strong> It shows before "see more". Make it a question or a sharp statement.</li>
+          <li><strong>Line breaks matter.</strong> One idea per line. Whitespace increases readability by 40%.</li>
+          <li><strong>No wall of text.</strong> Max 2 sentences per paragraph.</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">Voice &amp; Tone</div>
+        <ul>
+          <li><strong>Contractions allowed:</strong> "you don't" not "you do not". Write how you talk.</li>
+          <li><strong>No hashtags.</strong> Verifex rule. They reduce reach on LinkedIn in 2025–2026.</li>
+          <li><strong>No emojis.</strong> The design carries the visual weight. The caption stays clean.</li>
+          <li><strong>End with a question</strong> when the goal is engagement. End with a link when the goal is traffic.</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">CTA Patterns</div>
+        <ul>
+          <li><strong>Docs:</strong> "Full API reference at verifex.dev/docs"</li>
+          <li><strong>GitHub:</strong> "Star the repo — link in comments."</li>
+          <li><strong>Engagement:</strong> "What does your validation flow look like?"</li>
+          <li><strong>Announcement:</strong> "Shipped today. What do you want to see next?"</li>
+          <li><strong>Never:</strong> "Like and share if you found this useful."</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════
+     PHASE 3 — X (TWITTER) TEMPLATES
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Phase 3 — X (Twitter)</div>
+    <div class="section-title">X Templates</div>
+    <div class="section-desc">Three formats: Feed Post (1200×675), Thread Cover Card, and Profile Banner (1500×500). X moves fast — designs are sharper and text is sparer than LinkedIn.</div>
+  </div>
+
+  <!-- ── SUBSECTION A: Feed Posts ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">A — Feed Post</span>
+      <span class="subsection-meta">1200 × 675 px (16:9) &nbsp;·&nbsp; 4 content types</span>
+    </div>
+    <div class="li-grid-2">
+
+      <!-- Quote — Dark -->
+      <div>
+        <div class="x-post card dark">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Validating email <em>format</em> is easy.<br>Validating that the inbox <em>exists</em><br>is what actually matters.</p>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Quote / Insight — Dark</div>
+      </div>
+
+      <!-- Stat — Teal -->
+      <div>
+        <div class="x-post card teal">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">23%</div>
+            <div class="stat-label">of email lists decay every year. Check yours before your next campaign.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">verifex.dev</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Stat Drop — Teal</div>
+      </div>
+
+      <!-- Announcement — Cream -->
+      <div>
+        <div class="x-post card cream">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">Open Source</div>
+            <div class="announce-headline">Verifex is live on GitHub.<br>Email validation API, free to self-host.<br>No rate-limit games.</div>
+            <span class="announce-cta">Star on GitHub →</span>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">Validate once. Trust always.</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Announcement — Cream</div>
+      </div>
+
+      <!-- Code Tip — White -->
+      <div>
+        <div class="x-post card white">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="code-body">
+            <div class="code-eyebrow">Dev tip — validate before you send</div>
+            <div class="code-block">
+              <pre><span class="kw">const</span> { valid, mx, reason } =
+  <span class="kw">await</span> fetch(<span class="str">'/api/v1/validate'</span>, {
+    method: <span class="str">'POST'</span>,
+    headers: { <span class="str">'X-API-Key'</span>: key },
+    body: JSON.stringify({ email })
+  }).then(r => r.json())</pre>
+            </div>
+            <div class="code-caption">One call. Format + domain + MX. Returns reason on failure.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="tagline">verifex.dev/docs</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Code / Dev Tip — White</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION B: Thread Cover Card ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">B — Thread Cover Card</span>
+      <span class="subsection-meta">1200 × 675 px &nbsp;·&nbsp; First image in a long-form X thread &nbsp;·&nbsp; Dark only</span>
+    </div>
+    <div class="li-grid-2">
+
+      <!-- Thread cover — technical topic -->
+      <div>
+        <div class="x-thread-cover card dark">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="thread-body">
+            <div class="thread-label">Thread</div>
+            <div class="thread-hook">How we built an email validation API that handles 1M calls/day.</div>
+            <div class="thread-sub">Architecture, trade-offs, and what we'd do differently.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="thread-count">8 tweets →</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Thread Cover — Technical</div>
+      </div>
+
+      <!-- Thread cover — opinion / insight topic -->
+      <div>
+        <div class="x-thread-cover card dark">
+          <div class="logo-row">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="thread-body">
+            <div class="thread-label">Thread</div>
+            <div class="thread-hook">Most developers validate email format. Almost none validate the MX record. Here's why that's a problem.</div>
+            <div class="thread-sub">A data point that changed how we think about email.</div>
+          </div>
+          <div class="bottom-row">
+            <span class="thread-count">6 tweets →</span>
+            <div class="accent-bar"></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Thread Cover — Insight / Opinion</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION C: Profile Banner ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">C — Profile Banner</span>
+      <span class="subsection-meta">1500 × 500 px (3:1) &nbsp;·&nbsp; Dark variant — updated on major launches</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div>
+        <div class="x-banner dark" style="background:#111111;">
+          <div class="banner-inner">
+            <div class="banner-logo-row">
+              <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+              <span class="banner-wordmark">verifex</span>
+            </div>
+            <div class="banner-tagline" style="color:#555047;">Validate once. Trust always.</div>
+          </div>
+          <span class="banner-url">verifex.dev</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Profile Banner — Dark</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION D: X Caption Rules ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">D — X Caption Rules</span>
+      <span class="subsection-meta">X moves faster than LinkedIn — different rules apply</span>
+    </div>
+    <div class="caption-rules-grid">
+      <div class="caption-card">
+        <div class="platform-name">Length &amp; Format</div>
+        <ul>
+          <li><strong>280 character limit</strong> on standard posts. Do not exceed it — cropping kills impact.</li>
+          <li><strong>Hook in the first line.</strong> Most people won't expand. The first sentence must carry the whole idea.</li>
+          <li><strong>One idea per post.</strong> Save nuance for the thread. The standalone post must land on its own.</li>
+          <li><strong>Short sentences win.</strong> Under 12 words per sentence where possible.</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">Voice &amp; Tone</div>
+        <ul>
+          <li><strong>Sharper than LinkedIn.</strong> Cut every word that isn't earning its place.</li>
+          <li><strong>No hashtags.</strong> Verifex rule. They signal low quality on X in 2025–2026.</li>
+          <li><strong>No emojis.</strong> The image carries the visual. The text stays clean.</li>
+          <li><strong>Contractions always.</strong> "You don't" not "you do not". Reads faster.</li>
+          <li><strong>Second person only.</strong> "You", "your", never "we found that users…"</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">Thread Rules</div>
+        <ul>
+          <li><strong>Thread cover image = tweet 1.</strong> It must be a complete hook — not a teaser.</li>
+          <li><strong>Number your tweets</strong> inside the thread: "1/ The problem. 2/ Why it matters…"</li>
+          <li><strong>Last tweet = CTA.</strong> Always. Either a link, a follow ask, or a question to reply.</li>
+          <li><strong>Max 10 tweets per thread.</strong> Past that, publish a blog post instead.</li>
+          <li><strong>Reply to your own thread</strong> 2 hours after posting to boost reach.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════
+     PHASE 4 — INSTAGRAM TEMPLATES
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Phase 4 — Instagram</div>
+    <div class="section-title">Instagram Templates</div>
+    <div class="section-desc">Five formats: Square Feed (1080×1080), Portrait Feed (1080×1350), Stories (1080×1920), Carousel (1080×1080 per slide), and Highlight Covers. Instagram is the most visual platform — every pixel counts.</div>
+  </div>
+
+  <!-- ── SUBSECTION A: Square Feed ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">A — Square Feed Post</span>
+      <span class="subsection-meta">1080 × 1080 px &nbsp;·&nbsp; All 6 content types</span>
+    </div>
+    <div class="li-grid-3">
+
+      <!-- Quote — Dark -->
+      <div>
+        <div class="card dark" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Format valid.<br>Domain valid.<br>MX record <em>valid</em>.<br><br>That's the difference between<br>hoping and <em>knowing</em>.</p>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Quote — Dark</div>
+      </div>
+
+      <!-- Stat — Teal -->
+      <div>
+        <div class="card teal" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">2.3B</div>
+            <div class="stat-label">invalid emails sent every day. Most bounce silently.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">verifex.dev</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Stat — Teal</div>
+      </div>
+
+      <!-- Announcement — Cream -->
+      <div>
+        <div class="card cream" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">Now Live</div>
+            <div class="announce-headline">Free email validation API. One endpoint. No credit card.</div>
+            <span class="announce-cta">Link in bio →</span>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Announcement — Cream</div>
+      </div>
+
+      <!-- Code — White -->
+      <div>
+        <div class="card white" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="code-body">
+            <div class="code-eyebrow">Dev tip</div>
+            <div class="code-block">
+              <pre><span class="kw">const</span> { valid, mx } =
+  <span class="kw">await</span> verifex
+    .check(email)</pre>
+            </div>
+            <div class="code-caption">Format + MX in one call.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">verifex.dev/docs</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Code Tip — White</div>
+      </div>
+
+      <!-- Milestone — Teal -->
+      <div>
+        <div class="card teal" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="milestone-body">
+            <div class="milestone-badge">Milestone</div>
+            <div class="milestone-number">500★</div>
+            <div class="milestone-label">GitHub stars in the first week. Thank you.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Milestone — Teal</div>
+      </div>
+
+      <!-- Event — Dark -->
+      <div>
+        <div class="card dark" style="aspect-ratio:1/1;padding:20px;">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="event-body">
+            <div class="event-date">Thu 26 Jun — 3pm UTC</div>
+            <div class="event-title">How We Built a Zero-Downtime Email Validation API</div>
+            <div class="event-sub">Live. Free. Architecture walkthrough.</div>
+            <span class="event-cta">Register — link in bio →</span>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Event — Dark</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION B: Portrait Feed ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">B — Portrait Feed Post</span>
+      <span class="subsection-meta">1080 × 1350 px (4:5) &nbsp;·&nbsp; Takes up more feed space on mobile — higher reach</span>
+    </div>
+    <div class="ig-portrait-grid">
+
+      <!-- Quote — Dark -->
+      <div>
+        <div class="ig-portrait card dark">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Most email validation tools check <em>format</em>.<br><br>None of them tell you if the email actually <em>works</em>.<br><br>That's the only check that matters.</p>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Portrait — Quote / Dark</div>
+      </div>
+
+      <!-- Stat — Teal -->
+      <div>
+        <div class="ig-portrait card teal">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">23%</div>
+            <div class="stat-label">of email lists decay every year. Silent bounces. Missed invoices. Lost leads. Validate before you send.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">verifex.dev</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Portrait — Stat / Teal</div>
+      </div>
+
+      <!-- Announcement — Cream -->
+      <div>
+        <div class="ig-portrait card cream">
+          <div class="logo-row">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">Open Source</div>
+            <div class="announce-headline">Verifex is live on GitHub. Free to self-host. No rate-limit games. No credit card required.</div>
+            <span class="announce-cta">Link in bio →</span>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Portrait — Announcement / Cream</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION C: Stories ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">C — Stories</span>
+      <span class="subsection-meta">1080 × 1920 px (9:16) &nbsp;·&nbsp; 4 designs — 24hr lifespan, also saved as Highlights</span>
+    </div>
+    <div class="ig-story-grid">
+
+      <!-- Story 1 — Quote / Insight (Dark) -->
+      <div>
+        <div class="ig-story card dark">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="quote-body">
+            <p class="quote-text">Format valid.<br>Domain valid.<br>MX record <em>valid</em>.<br><br>That's the only check that actually matters.</p>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Story 1 — Quote</div>
+      </div>
+
+      <!-- Story 2 — Announcement (Cream) -->
+      <div>
+        <div class="ig-story card cream">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="announce-body">
+            <div class="announce-eyebrow">New Feature</div>
+            <div class="announce-headline">MX record validation is live. Check if the mail server actually exists.</div>
+            <span class="announce-cta">Tap link in bio →</span>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Story 2 — Announcement</div>
+      </div>
+
+      <!-- Story 3 — Stat Drop (Teal) -->
+      <div>
+        <div class="ig-story card teal">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="rgba(255,255,255,0.5)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-number">23%</div>
+            <div class="stat-label">of email lists decay every year. Silent bounces. Lost revenue.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">verifex.dev</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Story 3 — Stat Drop</div>
+      </div>
+
+      <!-- Story 4 — Link in Bio (Dark) -->
+      <div>
+        <div class="ig-story card dark">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="lib-body">
+            <div class="lib-headline">Everything you need is in the link.</div>
+            <div class="lib-sub">Free API. Open source. No credit card. Validate email format and MX record in a single call.</div>
+            <div class="lib-pill">Link in bio ↑</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Story 4 — Link in Bio</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION D: Carousel ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">D — Carousel</span>
+      <span class="subsection-meta">1080 × 1080 px per slide &nbsp;·&nbsp; 4-slide sequence &nbsp;·&nbsp; Up to 10 slides on Instagram</span>
+    </div>
+    <div class="carousel-track">
+
+      <!-- Slide 1: Cover — Dark -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 1 — Cover</div>
+        <div class="carousel-slide card dark slide-cover">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="cover-hook">
+            <div class="hook-label">Why your emails bounce</div>
+            <div class="hook-text">3 validation checks most developers never run.</div>
+            <div class="hook-sub">Swipe to see each one.</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">Swipe →</span><div class="accent-bar"></div></div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Step 1 — White -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 2 — Point 1</div>
+        <div class="carousel-slide card white slide-content">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="step-body">
+            <div class="step-num">01</div>
+            <div class="step-title">Format check</div>
+            <div class="step-desc">Valid structure? RFC 5322 + 254-char limit. Fast, no network needed.</div>
+            <div class="step-tag">Local · Under 1ms</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">1 of 3</span><div class="accent-bar"></div></div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Step 2 — White -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 3 — Point 2</div>
+        <div class="carousel-slide card white slide-content">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#D9D3C5" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="step-body">
+            <div class="step-num">02</div>
+            <div class="step-title">MX record check</div>
+            <div class="step-desc">Does the domain have a mail server? DNS lookup. Most tools skip this. Most bounces come from here.</div>
+            <div class="step-tag">Most skipped · Critical</div>
+          </div>
+          <div class="bottom-row"><span class="tagline">2 of 3</span><div class="accent-bar"></div></div>
+        </div>
+      </div>
+
+      <!-- Slide 4: CTA — Dark -->
+      <div class="carousel-slide-wrap">
+        <div class="carousel-slide-num">Slide 4 — CTA</div>
+        <div class="carousel-slide card dark slide-cta">
+          <div class="logo-row">
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <span class="wordmark">verifex</span>
+          </div>
+          <div class="cta-body">
+            <div class="cta-headline">Verifex runs all 3 checks in one API call.</div>
+            <span class="cta-link">Link in bio →</span>
+          </div>
+          <div class="bottom-row"><span class="tagline">Validate once. Trust always.</span><div class="accent-bar"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION E: Highlight Covers ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">E — Highlight Covers</span>
+      <span class="subsection-meta">1080 × 1080 px · Circular crop applied by Instagram &nbsp;·&nbsp; 6 branded icons</span>
+    </div>
+    <div class="ig-highlights-row">
+
+      <!-- API / Docs -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle teal">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <polyline points="10,13 6,18 10,23" stroke="#fff" stroke-width="2" stroke-linecap="square" fill="none"/>
+            <polyline points="26,13 30,18 26,23" stroke="#fff" stroke-width="2" stroke-linecap="square" fill="none"/>
+            <line x1="20" y1="11" x2="16" y2="25" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="square"/>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">API / Docs</div>
+      </div>
+
+      <!-- Updates -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle teal">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="9" stroke="#fff" stroke-width="2" fill="none"/>
+            <polyline points="18,13 18,18 22,18" stroke="#fff" stroke-width="2" stroke-linecap="square" fill="none"/>
+            <polyline points="25,11 27,8 24,8" stroke="#fff" stroke-width="1.5" stroke-linecap="square" fill="none"/>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">Updates</div>
+      </div>
+
+      <!-- About -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle cream" style="background:#E2DDD0;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none" transform="translate(8,8)"/>
+            <polyline points="13,22 16,26 23,19" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">About</div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle dark">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <text x="18" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" font-weight="800" fill="#5BBFBE">?</text>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">FAQ</div>
+      </div>
+
+      <!-- Tech Tips -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle teal">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect x="12" y="10" width="12" height="10" rx="1" stroke="#fff" stroke-width="1.8" fill="none"/>
+            <line x1="15" y1="20" x2="14" y2="24" stroke="#fff" stroke-width="1.8" stroke-linecap="square"/>
+            <line x1="21" y1="20" x2="22" y2="24" stroke="#fff" stroke-width="1.8" stroke-linecap="square"/>
+            <line x1="13" y1="24" x2="23" y2="24" stroke="#fff" stroke-width="1.8" stroke-linecap="square"/>
+            <line x1="15" y1="13" x2="21" y2="13" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="square"/>
+            <line x1="15" y1="16" x2="21" y2="16" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="square"/>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">Tech Tips</div>
+      </div>
+
+      <!-- Open Source -->
+      <div class="ig-highlight-item">
+        <div class="ig-highlight-circle dark">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <polygon points="18,10 20,15 26,15 21,19 23,25 18,21 13,25 15,19 10,15 16,15" stroke="#5BBFBE" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="ig-highlight-label">Open Source</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION F: Caption Rules ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">F — Instagram Caption Rules</span>
+      <span class="subsection-meta">Instagram captions read differently — shorter visible text, line breaks matter more</span>
+    </div>
+    <div class="caption-rules-grid">
+      <div class="caption-card">
+        <div class="platform-name">Length &amp; Visibility</div>
+        <ul>
+          <li><strong>First 125 characters</strong> show before "more". The hook must live there.</li>
+          <li><strong>Optimal length: 150–300 characters</strong> for feed posts. Long captions on Instagram are ignored.</li>
+          <li><strong>Stories have no captions.</strong> All communication is in the image — keep text on the template itself brief and readable at a glance.</li>
+          <li><strong>Line breaks as punctuation.</strong> One line. Gap. Next line. It reads vertically on mobile.</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">Voice &amp; Format</div>
+        <ul>
+          <li><strong>No hashtags.</strong> Verifex rule. They reduce organic reach on Instagram in 2025–2026.</li>
+          <li><strong>No emojis.</strong> The template carries the visual weight.</li>
+          <li><strong>Contractions always.</strong> "You don't" not "you do not".</li>
+          <li><strong>End with a CTA</strong> on every post — "Link in bio" is the standard call to action on Instagram.</li>
+          <li><strong>Never say "double tap"</strong> or "smash the like button". Direct and clean.</li>
+        </ul>
+      </div>
+      <div class="caption-card">
+        <div class="platform-name">Stories &amp; Highlights</div>
+        <ul>
+          <li><strong>Stories live 24 hours.</strong> Use for time-sensitive content — announcements, events, behind-the-scenes.</li>
+          <li><strong>Save every announcement story</strong> to the matching Highlight (Updates, API, FAQ, etc.).</li>
+          <li><strong>Link-in-bio story</strong> should be posted every time you update the link. Do not assume followers saw it.</li>
+          <li><strong>Carousels get 3× more reach</strong> than single posts on Instagram. Use them for educational content.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════
+     PHASE 5 — PROFILE ASSETS + SPEC TABLE
+     ════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-label">Phase 5 — Profile Assets &amp; Spec Table</div>
+    <div class="section-title">Profile Assets + Master Spec</div>
+    <div class="section-desc">Profile photo frames, company covers, and the complete spec table for every asset across all three platforms.</div>
+  </div>
+
+  <!-- ── SUBSECTION A: Profile Photo Frames ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">A — Profile Photo Frames</span>
+      <span class="subsection-meta">400 × 400 px &nbsp;·&nbsp; Used on LinkedIn and X &nbsp;·&nbsp; 3 ring variants</span>
+    </div>
+    <div class="profile-frame-row">
+
+      <div class="profile-frame-item">
+        <div class="profile-frame dark-frame">
+          <div class="profile-avatar">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+              <circle cx="21" cy="16" r="7" fill="#555047"/>
+              <path d="M6 38c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="#555047"/>
+            </svg>
+          </div>
+        </div>
+        <div class="profile-frame-label">Dark Frame</div>
+        <div class="profile-frame-sub">Teal ring · Dark bg</div>
+      </div>
+
+      <div class="profile-frame-item">
+        <div class="profile-frame teal-frame">
+          <div class="profile-avatar">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+              <circle cx="21" cy="16" r="7" fill="rgba(255,255,255,0.2)"/>
+              <path d="M6 38c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="rgba(255,255,255,0.2)"/>
+            </svg>
+          </div>
+        </div>
+        <div class="profile-frame-label">Teal Frame</div>
+        <div class="profile-frame-sub">Light teal ring · Teal bg</div>
+      </div>
+
+      <div class="profile-frame-item">
+        <div class="profile-frame cream-frame">
+          <div class="profile-avatar">
+            <svg width="42" height="42" viewBox="0 0 42 42" fill="none">
+              <circle cx="21" cy="16" r="7" fill="#B8B0A0"/>
+              <path d="M6 38c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="#B8B0A0"/>
+            </svg>
+          </div>
+        </div>
+        <div class="profile-frame-label">Cream Frame</div>
+        <div class="profile-frame-sub">Teal ring · Cream bg</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:10px;max-width:320px;padding-left:16px;border-left:2px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:var(--text-primary);">Usage Rules</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">
+          — Use <strong>Dark Frame</strong> on LinkedIn and X as the default.<br>
+          — Use <strong>Teal Frame</strong> during a launch week or milestone moment.<br>
+          — Use <strong>Cream Frame</strong> only if the profile header is already dark — to avoid blending into it.<br>
+          — Never use a profile photo without a brand ring — it is unbranded.<br>
+          — Minimum photo size: 400×400px. Do not upscale.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION B: LinkedIn Company Page Cover ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">B — LinkedIn Company Page Cover</span>
+      <span class="subsection-meta">1128 × 191 px &nbsp;·&nbsp; Wider, shorter than the personal banner &nbsp;·&nbsp; 2 variants</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <div>
+        <div class="li-company-cover dark-cover" style="background:#111111;">
+          <div class="cover-inner">
+            <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <div class="divider"></div>
+            <div class="cover-text">
+              <span class="cover-name">verifex</span>
+              <span class="cover-tagline">Validate once. Trust always.</span>
+            </div>
+          </div>
+          <span class="cover-url">verifex.dev</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Company Cover — Dark</div>
+      </div>
+
+      <div>
+        <div class="li-company-cover cream-cover" style="background:#E2DDD0;">
+          <div class="cover-inner">
+            <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#B8B0A0" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#1A7A78" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+            <div class="divider"></div>
+            <div class="cover-text">
+              <span class="cover-name">verifex</span>
+              <span class="cover-tagline">Validate once. Trust always.</span>
+            </div>
+          </div>
+          <span class="cover-url">verifex.dev</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:6px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;">Company Cover — Cream</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION C: Master Spec Table ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">C — Master Spec Table</span>
+      <span class="subsection-meta">Every asset, every platform, every dimension — in one place</span>
+    </div>
+    <div class="spec-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Dimensions (px)</th>
+            <th>Ratio</th>
+            <th>Colour Variants</th>
+            <th>File format</th>
+            <th>Update frequency</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- LinkedIn -->
+          <tr class="platform-row"><td colspan="6">LinkedIn</td></tr>
+          <tr>
+            <td>Feed Post — Landscape</td>
+            <td><span class="mono">1200 × 627</span></td>
+            <td>1.91:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream &nbsp;
+              <span class="variant-dot" style="background:#fff;border:1px solid #D9D3C5;"></span>White
+            </td>
+            <td>PNG</td>
+            <td>Per post</td>
+          </tr>
+          <tr>
+            <td>Feed Post — Square</td>
+            <td><span class="mono">1080 × 1080</span></td>
+            <td>1:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream
+            </td>
+            <td>PNG</td>
+            <td>Per post</td>
+          </tr>
+          <tr>
+            <td>Carousel Slide</td>
+            <td><span class="mono">1080 × 1080</span></td>
+            <td>1:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#fff;border:1px solid #D9D3C5;"></span>White
+            </td>
+            <td>PNG per slide</td>
+            <td>Per carousel (up to 10 slides)</td>
+          </tr>
+          <tr>
+            <td>Personal Profile Banner</td>
+            <td><span class="mono">1584 × 396</span></td>
+            <td>4:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream
+            </td>
+            <td>PNG or JPG</td>
+            <td>On major launches only</td>
+          </tr>
+          <tr>
+            <td>Company Page Cover</td>
+            <td><span class="mono">1128 × 191</span></td>
+            <td>5.9:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream
+            </td>
+            <td>PNG or JPG</td>
+            <td>Static — rarely changed</td>
+          </tr>
+          <tr>
+            <td>Profile Photo</td>
+            <td><span class="mono">400 × 400</span></td>
+            <td>1:1 (circular crop)</td>
+            <td>Dark Frame / Teal Frame / Cream Frame</td>
+            <td>PNG</td>
+            <td>Static</td>
+          </tr>
+
+          <!-- X / Twitter -->
+          <tr class="platform-row"><td colspan="6">X (Twitter)</td></tr>
+          <tr>
+            <td>Feed Post</td>
+            <td><span class="mono">1200 × 675</span></td>
+            <td>16:9</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream &nbsp;
+              <span class="variant-dot" style="background:#fff;border:1px solid #D9D3C5;"></span>White
+            </td>
+            <td>PNG</td>
+            <td>Per post</td>
+          </tr>
+          <tr>
+            <td>Thread Cover Card</td>
+            <td><span class="mono">1200 × 675</span></td>
+            <td>16:9</td>
+            <td><span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark only</td>
+            <td>PNG</td>
+            <td>Per thread</td>
+          </tr>
+          <tr>
+            <td>Profile Banner</td>
+            <td><span class="mono">1500 × 500</span></td>
+            <td>3:1</td>
+            <td><span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark only</td>
+            <td>PNG or JPG</td>
+            <td>On major launches only</td>
+          </tr>
+          <tr>
+            <td>Profile Photo</td>
+            <td><span class="mono">400 × 400</span></td>
+            <td>1:1 (circular crop)</td>
+            <td>Dark Frame / Teal Frame</td>
+            <td>PNG</td>
+            <td>Static</td>
+          </tr>
+
+          <!-- Instagram -->
+          <tr class="platform-row"><td colspan="6">Instagram</td></tr>
+          <tr>
+            <td>Feed Post — Square</td>
+            <td><span class="mono">1080 × 1080</span></td>
+            <td>1:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream &nbsp;
+              <span class="variant-dot" style="background:#fff;border:1px solid #D9D3C5;"></span>White
+            </td>
+            <td>PNG</td>
+            <td>Per post</td>
+          </tr>
+          <tr>
+            <td>Feed Post — Portrait</td>
+            <td><span class="mono">1080 × 1350</span></td>
+            <td>4:5</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream
+            </td>
+            <td>PNG</td>
+            <td>Per post — preferred for reach</td>
+          </tr>
+          <tr>
+            <td>Story</td>
+            <td><span class="mono">1080 × 1920</span></td>
+            <td>9:16</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#E2DDD0;border:1px solid #D9D3C5;"></span>Cream
+            </td>
+            <td>PNG or MP4</td>
+            <td>Daily when active — 24hr lifespan</td>
+          </tr>
+          <tr>
+            <td>Carousel Slide</td>
+            <td><span class="mono">1080 × 1080</span></td>
+            <td>1:1</td>
+            <td>
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark &nbsp;
+              <span class="variant-dot" style="background:#fff;border:1px solid #D9D3C5;"></span>White
+            </td>
+            <td>PNG per slide</td>
+            <td>Per carousel (up to 10 slides)</td>
+          </tr>
+          <tr>
+            <td>Highlight Cover</td>
+            <td><span class="mono">1080 × 1080</span></td>
+            <td>1:1 (circular crop)</td>
+            <td>
+              <span class="variant-dot" style="background:#1A7A78;"></span>Teal &nbsp;
+              <span class="variant-dot" style="background:#111;border:1px solid #555;"></span>Dark
+            </td>
+            <td>PNG</td>
+            <td>Static — one per category</td>
+          </tr>
+          <tr>
+            <td>Profile Photo</td>
+            <td><span class="mono">320 × 320</span></td>
+            <td>1:1 (circular crop)</td>
+            <td>Dark Frame / Teal Frame</td>
+            <td>PNG</td>
+            <td>Static</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SUBSECTION D: How to Use This Kit ── -->
+  <div class="subsection">
+    <div class="subsection-header">
+      <span class="subsection-title">D — How to Use This Kit</span>
+      <span class="subsection-meta">Taking these templates into Canva or Figma</span>
+    </div>
+    <div class="how-to-use">
+
+      <div class="how-step">
+        <div class="step-n">01</div>
+        <div class="step-title">Set up your token library</div>
+        <div class="step-body">Create a colour library in Canva or Figma using the 4 background variants and the semantic tokens from DESIGN.md. Name them exactly as defined — Dark, Teal, Cream, White. Never use a colour that is not in the system.</div>
+      </div>
+
+      <div class="how-step">
+        <div class="step-n">02</div>
+        <div class="step-title">Build one master template per format</div>
+        <div class="step-body">Create one frame per format at the correct pixel size — 1200×627 for LinkedIn landscape, 1080×1080 for square, 1080×1920 for stories. Then duplicate it 4 times and apply each colour variant. This becomes your source-of-truth template set.</div>
+      </div>
+
+      <div class="how-step">
+        <div class="step-n">03</div>
+        <div class="step-title">Swap content, keep structure</div>
+        <div class="step-body">For each post, choose the content type (Quote, Stat, Announcement, etc.), choose the variant from the usage guide in Phase 1, then replace only the text. Never move the logo, never change the font weight, never add elements that are not in the template. The structure is the brand.</div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ── Kit Footer ── -->
+<footer class="kit-footer">
+  <div class="footer-left">
+    <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><rect x="1" y="1" width="18" height="18" rx="2" stroke="#1A7A78" stroke-width="1.5" fill="none"/><polyline points="5,10 9,14 15,7" stroke="#5BBFBE" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg>
+    <div>
+      <div class="footer-wordmark">verifex</div>
+      <div class="footer-tagline">Validate once. Trust always.</div>
+    </div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-meta">
+      Social Media Template Kit — All 5 Phases Complete<br>
+      6 content types · 4 colour variants · 3 platforms<br>
+      LinkedIn · X (Twitter) · Instagram<br>
+      verifex.dev
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
