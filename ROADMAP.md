@@ -11,15 +11,15 @@ Update the status of each phase as work progresses. Do not move to the next phas
 | Phase | Name | Status |
 |---|---|---|
 | 0 | Foundation | ✅ Complete |
-| 1 | Setup & Infrastructure | ⬜ Not started |
-| 2 | Authentication | ⬜ Not started |
-| 3 | Dashboard Shell | ⬜ Not started |
-| 4 | API Key Management | ⬜ Not started |
-| 5 | Email Validation Engine | ⬜ Not started |
-| 6 | Usage Dashboard | ⬜ Not started |
-| 7 | Settings | ⬜ Not started |
-| 8 | API Documentation | ⬜ Not started |
-| 9 | Landing Page | ⬜ Not started |
+| 1 | Setup & Infrastructure | ✅ Complete |
+| 2 | Landing Page | ✅ Complete |
+| 3 | Authentication | ✅ Complete |
+| 4 | Dashboard Shell | ✅ Complete |
+| 5 | API Key Management | ✅ Complete |
+| 6 | Email Validation Engine | ✅ Complete |
+| 7 | Usage Dashboard | ✅ Complete |
+| 8 | Settings | ✅ Complete |
+| 9 | API Documentation | ✅ Complete |
 | 10 | Quality Assurance | ⬜ Not started |
 | 11 | Ship | ⬜ Not started |
 
@@ -53,7 +53,7 @@ Everything built before writing a single line of product code. No phase can skip
 ---
 
 ## Phase 1 — Setup & Infrastructure
-**Status: ⬜ Not started**
+**Status: ✅ Complete**
 
 ### Objective
 Get the project running locally with a live Supabase database. Nothing gets built until the database exists and the app starts without errors.
@@ -120,8 +120,53 @@ Open `http://localhost:3000`. The page loads. No console errors. No TypeScript e
 
 ---
 
-## Phase 2 — Authentication
-**Status: ⬜ Not started**
+## Phase 2 — Landing Page
+**Status: ✅ Complete**
+
+### Objective
+The public landing page is the first thing every visitor sees. It must exist before authentication so visitors have a clear entry point to register or log in.
+
+### Sections
+
+**1. Hero** — `src/components/landing/Hero.tsx`
+- Headline, sub-headline, two CTAs: "Get started free" (→ `/register`) and "View docs" (→ `/docs`)
+- Framer Motion entrance animation
+
+**2. How It Works** — `src/components/landing/HowItWorks.tsx`
+- Three steps: Register → Get API key → Call the API
+- Simple icons, short descriptions
+
+**3. Response Preview** — `src/components/landing/ResponsePreview.tsx`
+- Side-by-side: valid email response and invalid email response
+- Syntax-highlighted JSON using Shiki
+- Shows exactly what a developer gets back
+
+**4. FAQ** — `src/components/landing/Faq.tsx`
+- Questions: What does it check? Is it free? Is it open source? Can I self-host? What is not checked (SMTP)?
+- Accordion layout
+
+**5. Call to Action** — `src/components/landing/CallToAction.tsx`
+- Final CTA section: "Start validating emails in 2 minutes"
+- Single button → `/register`
+
+**6. Landing page** — `src/app/page.tsx`
+- Assembles all sections
+- No navbar for now (can be added later)
+
+### Acceptance Criteria
+- [ ] All five sections render correctly
+- [ ] "Get started free" links to `/register`
+- [ ] "View docs" links to `/docs`
+- [ ] Response preview shows syntax-highlighted JSON
+- [ ] Framer Motion animations play on page load
+- [ ] Page looks good on mobile (responsive)
+- [ ] `npm run typecheck` passes
+- [ ] `npm run lint` passes
+
+---
+
+## Phase 3 — Authentication
+**Status: ✅ Complete**
 
 ### Objective
 A user can register, confirm their email, log in, and log out. The dashboard is protected — unauthenticated users are redirected to login.
@@ -174,8 +219,8 @@ A user can register, confirm their email, log in, and log out. The dashboard is 
 
 ---
 
-## Phase 3 — Dashboard Shell
-**Status: ⬜ Not started**
+## Phase 4 — Dashboard Shell
+**Status: ✅ Complete**
 
 ### Objective
 A logged-in user sees a professional dashboard layout with sidebar navigation, a topbar, and working navigation between pages. No feature data yet — just the shell.
@@ -206,19 +251,18 @@ A logged-in user sees a professional dashboard layout with sidebar navigation, a
 - Replace the stub with `<DashboardShell>`
 
 ### Acceptance Criteria
-- [ ] Sidebar visible on desktop with all four navigation links
-- [ ] Clicking a nav link navigates to the correct page
-- [ ] Active link is visually highlighted
-- [ ] Topbar shows the correct page title
-- [ ] Sign out button logs the user out and redirects to `/login`
-- [ ] On mobile, sidebar is hidden and a drawer opens via the topbar button
-- [ ] `npm run typecheck` passes
-- [ ] `npm run lint` passes
+- [x] Sidebar visible on desktop with all four navigation links
+- [x] Clicking a nav link navigates to the correct page
+- [x] Active link is visually highlighted
+- [x] Topbar shows the correct page title
+- [x] Sign out button logs the user out and redirects to `/` (landing page)
+- [x] On mobile, sidebar is hidden and a drawer opens via the topbar button
+- [x] `npm run typecheck` passes
 
 ---
 
-## Phase 4 — API Key Management
-**Status: ⬜ Not started**
+## Phase 5 — API Key Management
+**Status: ✅ Complete**
 
 ### Objective
 A user can create an API key, see it once, copy it, and later revoke it. The dashboard keys page shows all active and revoked keys.
@@ -273,8 +317,8 @@ A user can create an API key, see it once, copy it, and later revoke it. The das
 
 ---
 
-## Phase 5 — Email Validation Engine
-**Status: ⬜ Not started**
+## Phase 6 — Email Validation Engine
+**Status: ✅ Complete**
 
 ### Objective
 The core product. A developer can call `POST /api/v1/validate` with an API key and an email address and get a structured validation result back.
@@ -330,8 +374,8 @@ For the validation endpoint, session cookies do not exist (caller is external co
 
 ---
 
-## Phase 6 — Usage Dashboard
-**Status: ⬜ Not started**
+## Phase 7 — Usage Dashboard
+**Status: ✅ Complete**
 
 ### Objective
 A logged-in user can see how many validations they have made, the breakdown of valid vs invalid, and a table of recent calls.
@@ -364,8 +408,8 @@ A logged-in user can see how many validations they have made, the breakdown of v
 
 ---
 
-## Phase 7 — Settings
-**Status: ⬜ Not started**
+## Phase 8 — Settings
+**Status: ✅ Complete**
 
 ### Objective
 A logged-in user can update their display name, change their password, and permanently delete their account.
@@ -405,8 +449,8 @@ Delete in FK-safe order:
 
 ---
 
-## Phase 8 — API Documentation
-**Status: ⬜ Not started**
+## Phase 9 — API Documentation
+**Status: ✅ Complete**
 
 ### Objective
 A public documentation page at `/docs` explains the API to any visitor. Inside the dashboard at `/dashboard/docs`, the same page shows the user's own key prefix in the code examples.
@@ -441,51 +485,6 @@ A public documentation page at `/docs` explains the API to any visitor. Inside t
 - [ ] Code examples have syntax highlighting
 - [ ] All endpoints are documented: validate, list keys, create key, revoke key, get usage, delete account
 - [ ] Both response shapes are shown for the validate endpoint (valid and invalid)
-- [ ] `npm run typecheck` passes
-- [ ] `npm run lint` passes
-
----
-
-## Phase 9 — Landing Page
-**Status: ⬜ Not started**
-
-### Objective
-The public landing page explains what Verifex is, shows how it works, previews the API response, and sends visitors to register.
-
-### Sections
-
-**1. Hero** — `src/components/landing/Hero.tsx`
-- Headline, sub-headline, two CTAs: "Get started free" (→ `/register`) and "View docs" (→ `/docs`)
-- Framer Motion entrance animation
-
-**2. How It Works** — `src/components/landing/HowItWorks.tsx`
-- Three steps: Register → Get API key → Call the API
-- Simple icons, short descriptions
-
-**3. Response Preview** — `src/components/landing/ResponsePreview.tsx`
-- Side-by-side: valid email response and invalid email response
-- Syntax-highlighted JSON using Shiki
-- Shows exactly what a developer gets back
-
-**4. FAQ** — `src/components/landing/Faq.tsx`
-- Questions: What does it check? Is it free? Is it open source? Can I self-host? What is not checked (SMTP)?
-- Accordion layout
-
-**5. Call to Action** — `src/components/landing/CallToAction.tsx`
-- Final CTA section: "Start validating emails in 2 minutes"
-- Single button → `/register`
-
-**6. Landing page** — `src/app/page.tsx`
-- Assembles all sections
-- No navbar for now (can be added later)
-
-### Acceptance Criteria
-- [ ] All five sections render correctly
-- [ ] "Get started free" links to `/register`
-- [ ] "View docs" links to `/docs`
-- [ ] Response preview shows syntax-highlighted JSON
-- [ ] Framer Motion animations play on page load
-- [ ] Page looks good on mobile (responsive)
 - [ ] `npm run typecheck` passes
 - [ ] `npm run lint` passes
 

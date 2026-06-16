@@ -34,3 +34,15 @@ export async function updateProfile(fullName: string): Promise<void> {
   const { error } = await supabase.auth.updateUser({ data: { full_name: fullName } });
   if (error) throw error;
 }
+
+export async function updatePassword(
+  email: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<void> {
+  const supabase = createClient();
+  const { error: authError } = await supabase.auth.signInWithPassword({ email, password: currentPassword });
+  if (authError) throw new Error('Current password is incorrect');
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) throw error;
+}

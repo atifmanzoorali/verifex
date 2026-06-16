@@ -7,5 +7,6 @@ export const API_BASE_PATH = `/api/${API_VERSION}`;
 
 export const USAGE_DEFAULT_LIMIT = 20;
 export const USAGE_MAX_LIMIT = 100;
+export const RATE_LIMIT_PER_MINUTE = 60;
 
 export const MAX_API_KEYS_PER_USER = 10;

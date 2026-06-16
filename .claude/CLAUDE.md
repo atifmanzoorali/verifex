@@ -31,22 +31,22 @@ Read these before doing anything:
 
 ## Current Status
 
-**Phase 0 (Foundation) is complete.** The entire scaffold is built and reviewed. Dependencies are not yet installed.
+**Phase 9 (API Documentation) is complete.** Public docs at `/docs` (unauthenticated, sticky header, back-to-home nav). Dashboard docs at `/dashboard/docs` (authenticated, shows real key prefix in curl examples). Both use DocsLayout with sticky sidebar nav, EndpointCard per endpoint, and CodeBlock for Shiki-highlighted code. All 6 endpoints documented: validate, list keys, create key, revoke key, get usage, delete account. Error codes table included.
 
-**Next step: Phase 1 of ROADMAP.md — install dependencies and initialise shadcn/ui.**
+**Next step: Phase 10 of ROADMAP.md — Quality Assurance.**
 
 ### Phase Progress
 
 - [x] Phase 0 — Foundation (scaffold, config, types, stubs, migration, design system)
-- [ ] Phase 1 — Setup & Infrastructure (install deps, shadcn, Supabase project, migration)
-- [ ] Phase 2 — Authentication
-- [ ] Phase 3 — Dashboard Shell
-- [ ] Phase 4 — API Key Management
-- [ ] Phase 5 — Email Validation Engine
-- [ ] Phase 6 — Usage Dashboard
-- [ ] Phase 7 — Settings
-- [ ] Phase 8 — API Documentation
-- [ ] Phase 9 — Landing Page
+- [x] Phase 1 — Setup & Infrastructure (install deps, shadcn, Supabase project, migration)
+- [x] Phase 2 — Landing Page
+- [x] Phase 3 — Authentication
+- [x] Phase 4 — Dashboard Shell
+- [x] Phase 5 — API Key Management
+- [x] Phase 6 — Email Validation Engine
+- [x] Phase 7 — Usage Dashboard
+- [x] Phase 8 — Settings
+- [x] Phase 9 — API Documentation
 - [ ] Phase 10 — Quality Assurance
 - [ ] Phase 11 — Ship
 
@@ -60,7 +60,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 
 | File | What is in it |
 |---|---|
-| `src/lib/constants.ts` | API key prefix, limits, versioning constants |
+| `src/lib/constants.ts` | API key prefix, limits, versioning, rate limit constants |
 | `src/lib/errors.ts` | `errorResponse()` + `withErrorHandler()` — fully implemented |
 | `src/lib/env.ts` | Startup env var validation — reads all required vars or throws |
 | `src/lib/utils.ts` | `cn()`, `formatDate()`, `formatDuration()` |
@@ -68,8 +68,9 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/lib/validate-mx.ts` | DNS MX record lookup via `dns/promises` |
 | `src/lib/shiki.ts` | Server-side syntax highlighter singleton |
 | `src/lib/docs-data.ts` | Pre-highlighted code examples for docs page |
-| `src/lib/supabase/client.ts` | Browser Supabase client using `env` |
-| `src/lib/supabase/server.ts` | Server Supabase client using `env` |
+| `src/lib/supabase/client.ts` | Browser Supabase client — reads `process.env.NEXT_PUBLIC_*` directly (NOT via `env.ts` — that causes a client-side crash) |
+| `src/lib/supabase/server.ts` | Cookie-based server Supabase client — used for all dashboard route handlers |
+| `src/lib/supabase/service.ts` | Service role Supabase client singleton — bypasses RLS, used by validate endpoint only (no session cookie) |
 | `src/middleware.ts` | Route protection + session refresh — complete |
 | `src/app/auth/callback/route.ts` | Supabase email confirmation handler — complete |
 | `src/app/layout.tsx` | Root layout with `AuthProvider` mounted — complete |
@@ -82,7 +83,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/hooks/useUsage.ts` | Usage data hook — complete |
 | `src/services/auth.service.ts` | Auth service functions — complete |
 | `src/services/keys.service.ts` | Keys service functions — complete |
-| `src/services/usage.service.ts` | Usage service functions — complete |
+| `src/services/usage.service.ts` | Usage service functions + `UsageSummary`, `UsageLog`, `UsageResponse` types — complete |
 | `src/types/api.types.ts` | Standard API response types |
 | `src/types/key.types.ts` | API key types |
 | `src/types/validation.types.ts` | Validation result types |
@@ -92,28 +93,50 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `tests/validate-format.test.ts` | 6 tests including length check |
 | `tests/validate-mx.test.ts` | 2 tests — real domain + fake domain |
 | `tests/keys.service.test.ts` | Key format tests |
+| `src/app/page.tsx` | Landing page — assembles all 6 sections, uses Suspense for ResponsePreview |
+| `src/components/landing/Navbar.tsx` | Pill navbar — floating, logo left, links + CTA right, Framer Motion entrance |
+| `src/components/landing/Hero.tsx` | Hero section — full viewport, Swiss typography, teal depth blur, Framer Motion stagger |
+| `src/components/landing/HowItWorks.tsx` | 3-step grid — large muted numbers, border-left column separators |
+| `src/components/landing/ResponsePreview.tsx` | Async server component — Shiki-highlighted valid/invalid JSON on dark background |
+| `src/components/landing/Faq.tsx` | Custom accordion — 5 questions, numbered, plus/minus toggle |
+| `src/components/landing/CallToAction.tsx` | Final CTA — brand-cream bg, headline left, button right, footer bar |
+| `src/components/auth/RegisterForm.tsx` | React Hook Form + Zod — Full Name, Email, Password — calls `signUp()` |
+| `src/components/auth/LoginForm.tsx` | React Hook Form + Zod — Email, Password — calls `signIn()`, redirects to `/dashboard` |
+| `src/components/auth/ForgotPasswordForm.tsx` | React Hook Form + Zod — Email only — calls `resetPassword()` |
+| `src/app/(auth)/register/page.tsx` | Mounts `RegisterForm` — complete |
+| `src/app/(auth)/login/page.tsx` | Mounts `LoginForm` — complete |
+| `src/app/(auth)/forgot-password/page.tsx` | Mounts `ForgotPasswordForm` — complete |
+| `src/components/dashboard/Sidebar.tsx` | VFX monogram logo, 4 nav links with teal left-border active state, sign out → `/` |
+| `src/components/dashboard/Topbar.tsx` | Page title hidden on desktop (content H1 owns it), shown on mobile; user avatar right |
+| `src/components/dashboard/MobileDrawer.tsx` | Slide-in drawer — matching VFX logo, same nav as sidebar, backdrop overlay |
+| `src/components/dashboard/DashboardShell.tsx` | Combines Sidebar + Topbar + MobileDrawer; content centred in `max-w-4xl` wrapper |
+| `src/app/dashboard/layout.tsx` | Mounts `DashboardShell` — complete |
+| `src/app/api/v1/keys/route.ts` | GET/POST/DELETE — session auth, Zod validation, SHA-256 hashing, 10-key limit |
+| `src/components/keys/KeyCard.tsx` | 3px teal left-border accent, key prefix as hero in monospace, dots for hidden portion, subtle revoke button; revoked keys at 40% opacity |
+| `src/components/keys/CreateKeyModal.tsx` | Two-state dialog: name form → raw key revealed once with copy button |
+| `src/components/keys/RevokeDialog.tsx` | Confirmation dialog before revoking a key |
+| `src/app/dashboard/keys/page.tsx` | text-3xl H1, active key count (X of 10), separator, empty state with Key icon; uses `useApiKeys()` |
+| `src/app/api/v1/validate/route.ts` | POST — X-API-Key auth, rate limit (60/min), format check, MX check, usage logging |
+| `src/app/api/v1/usage/route.ts` | GET — session auth, summary counts from ALL logs, paginated rows |
+| `src/components/usage/StatCard.tsx` | 3px coloured left-border accent (teal/green/red), animated loading skeleton |
+| `src/components/usage/ActivityTable.tsx` | Table: domain (mono), valid/invalid badge, duration, timestamp; alternating rows |
+| `src/app/dashboard/page.tsx` | Overview — 3 StatCards + ActivityTable, uses `useUsage()` |
+| `src/app/api/v1/account/route.ts` | DELETE — session auth, FK-safe delete (usage_logs → api_keys → profiles → auth.users via service role) |
+| `src/components/settings/ProfileForm.tsx` | React Hook Form + Zod — display name field, calls `updateProfile()`, inline success/error |
+| `src/components/settings/PasswordForm.tsx` | React Hook Form + Zod — current + new + confirm; calls `updatePassword()` which re-auths then updates |
+| `src/components/settings/DeleteAccountDialog.tsx` | Confirmation dialog — user must type "delete my account"; calls DELETE /api/v1/account, then signOut, then redirects to / |
+| `src/app/dashboard/settings/page.tsx` | Three sections: Profile, Password, Danger Zone — complete |
+
+| `src/lib/docs-data.ts` | All 6 endpoints pre-highlighted via Shiki; `getDocsData(keyPrefix?)` substitutes real key prefix in curl examples |
+| `src/components/docs/CodeBlock.tsx` | Renders Shiki HTML in dark `bg-[#111111]` container |
+| `src/components/docs/EndpointCard.tsx` | Method badge (coloured), path, description, auth note, stacked CodeBlocks |
+| `src/components/docs/DocsLayout.tsx` | Sticky sidebar (anchor links), BaseUrl card, ResponseEnvelope card, endpoint sections, error codes table |
+| `src/app/docs/page.tsx` | Public Server Component — sticky header with back nav and CTA, full docs below |
+| `src/app/dashboard/docs/page.tsx` | Dashboard Server Component — reads user's first active key prefix, passes to getDocsData |
 
 ## What Is a Stub (Needs Building)
 
-These files exist with placeholder logic. They will be built in their respective phases.
-
-| File | Built in Phase |
-|---|---|
-| `src/app/page.tsx` | Phase 9 — Landing Page |
-| `src/app/(auth)/login/page.tsx` | Phase 2 — Authentication |
-| `src/app/(auth)/register/page.tsx` | Phase 2 — Authentication |
-| `src/app/(auth)/forgot-password/page.tsx` | Phase 2 — Authentication |
-| `src/app/dashboard/layout.tsx` | Phase 3 — Dashboard Shell |
-| `src/app/dashboard/page.tsx` | Phase 6 — Usage Dashboard |
-| `src/app/dashboard/keys/page.tsx` | Phase 4 — API Key Management |
-| `src/app/dashboard/settings/page.tsx` | Phase 7 — Settings |
-| `src/app/dashboard/docs/page.tsx` | Phase 8 — API Docs |
-| `src/app/docs/page.tsx` | Phase 8 — API Docs |
-| `src/app/api/v1/keys/route.ts` | Phase 4 — API Key Management |
-| `src/app/api/v1/validate/route.ts` | Phase 5 — Email Validation Engine |
-| `src/app/api/v1/usage/route.ts` | Phase 6 — Usage Dashboard |
-| `src/app/api/v1/account/route.ts` | Phase 7 — Settings |
-| `src/components/` | All component folders are empty — built per phase |
+*All stubs are now built. Phase 10 — Quality Assurance is next.*
 
 ---
 
@@ -130,38 +153,38 @@ verifex/
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                  stub
+│   │   ├── page.tsx                  complete — landing page
 │   │   ├── layout.tsx                complete — AuthProvider mounted
-│   │   ├── globals.css               complete — CSS variables need updating (Phase 1)
+│   │   ├── globals.css               complete
 │   │   ├── error.tsx                 complete — root error boundary
 │   │   ├── not-found.tsx             complete — custom 404
-│   │   ├── docs/page.tsx             stub
+│   │   ├── docs/page.tsx             stub — Phase 9
 │   │   ├── (auth)/
 │   │   │   ├── layout.tsx            complete — centered layout
-│   │   │   ├── login/page.tsx        stub
-│   │   │   ├── register/page.tsx     stub
-│   │   │   └── forgot-password/page.tsx  stub
+│   │   │   ├── login/page.tsx        complete
+│   │   │   ├── register/page.tsx     complete
+│   │   │   └── forgot-password/page.tsx  complete
 │   │   ├── auth/callback/route.ts    complete
 │   │   ├── dashboard/
-│   │   │   ├── layout.tsx            stub
-│   │   │   ├── page.tsx              stub
+│   │   │   ├── layout.tsx            complete — DashboardShell
+│   │   │   ├── page.tsx              complete — Overview (StatCards + ActivityTable)
 │   │   │   ├── error.tsx             complete — dashboard error boundary
-│   │   │   ├── keys/page.tsx         stub
-│   │   │   ├── docs/page.tsx         stub
-│   │   │   └── settings/page.tsx     stub
+│   │   │   ├── keys/page.tsx         complete — API Key Management
+│   │   │   ├── docs/page.tsx         stub — Phase 9
+│   │   │   └── settings/page.tsx     stub — Phase 8
 │   │   └── api/v1/
-│   │       ├── validate/route.ts     stub — wrapped with withErrorHandler
-│   │       ├── keys/route.ts         stub — wrapped with withErrorHandler
-│   │       ├── usage/route.ts        stub — wrapped with withErrorHandler
-│   │       └── account/route.ts      stub — wrapped with withErrorHandler
+│   │       ├── validate/route.ts     complete — email validation engine
+│   │       ├── keys/route.ts         complete — GET/POST/DELETE
+│   │       ├── usage/route.ts        complete — GET with summary + pagination
+│   │       └── account/route.ts      stub — Phase 8
 │   ├── components/
-│   │   ├── landing/                  empty — Phase 9
-│   │   ├── dashboard/                empty — Phase 3
-│   │   ├── keys/                     empty — Phase 4
-│   │   ├── usage/                    empty — Phase 6
-│   │   ├── settings/                 empty — Phase 7
-│   │   ├── docs/                     empty — Phase 8
-│   │   └── ui/                       empty — populated by shadcn in Phase 1
+│   │   ├── landing/                  complete — all 6 sections built
+│   │   ├── dashboard/                complete — Sidebar, Topbar, MobileDrawer, DashboardShell
+│   │   ├── keys/                     complete — KeyCard, CreateKeyModal, RevokeDialog
+│   │   ├── usage/                    complete — StatCard, ActivityTable
+│   │   ├── settings/                 empty — Phase 8
+│   │   ├── docs/                     empty — Phase 9
+│   │   └── ui/                       complete — shadcn components
 │   ├── services/
 │   │   ├── auth.service.ts           complete
 │   │   ├── keys.service.ts           complete
@@ -172,8 +195,9 @@ verifex/
 │   │   └── useUsage.ts               complete
 │   ├── lib/
 │   │   ├── supabase/
-│   │   │   ├── client.ts             complete — uses env.ts
-│   │   │   └── server.ts             complete — uses env.ts
+│   │   │   ├── client.ts             complete — browser client
+│   │   │   ├── server.ts             complete — cookie-based server client
+│   │   │   └── service.ts            complete — service role client (validate endpoint only)
 │   │   ├── constants.ts              complete
 │   │   ├── env.ts                    complete — startup env validation
 │   │   ├── errors.ts                 complete — errorResponse + withErrorHandler
@@ -181,7 +205,7 @@ verifex/
 │   │   ├── validate-mx.ts            complete — DNS MX lookup
 │   │   ├── shiki.ts                  complete
 │   │   ├── docs-data.ts              complete
-│   │   └── utils.ts                  complete
+│   │   └── utils.ts                  complete — cn, formatDate, formatDuration
 │   ├── middleware.ts                 complete
 │   └── types/
 │       ├── api.types.ts              complete
@@ -210,11 +234,11 @@ verifex/
 ├── .gitignore                        complete
 ├── .prettierrc                       complete
 ├── LICENSE                           complete
-├── next.config.ts                    complete
-├── package.json                      complete — all deps listed, not yet installed
+├── next.config.mjs                   complete
+├── package.json                      complete
 ├── postcss.config.mjs                complete
 ├── README.md                         stub — written in Phase 11
-├── tailwind.config.ts                complete — CSS vars need updating (Phase 1)
+├── tailwind.config.ts                complete
 ├── tsconfig.json                     complete — strict mode
 ├── vercel.json                       complete — security headers
 └── vitest.config.ts                  complete
@@ -237,6 +261,29 @@ If a change would break this chain, restructure rather than break the rule.
 
 ---
 
+## Two Auth Systems — Never Mixed
+
+| Auth Type | Used For | Client |
+|---|---|---|
+| Supabase session (httpOnly cookie) | Dashboard operations — keys, usage, settings | `lib/supabase/server.ts` |
+| API Key (`X-API-Key` header) | `POST /api/v1/validate` only | `lib/supabase/service.ts` |
+
+---
+
+## Dashboard Design Decisions (Do Not Undo)
+
+These were deliberate design choices made during Phase 4–7:
+
+- **Sidebar logo:** VFX monogram tile (teal square, white text) + "Verifex" wordmark. The "VFX" references the `vfx_live_` API key prefix — intentional brand tie.
+- **Topbar:** Page title is hidden on desktop (`lg:hidden`) because the content H1 owns the page. Title shows on mobile where the sidebar is hidden.
+- **Page H1s:** `text-3xl font-bold tracking-tight` — bigger than the original design spec. Intentional.
+- **Left-border accent pattern:** Used on KeyCards (3px teal = active, gray = revoked), StatCards (teal/green/red), and nav items. This is the visual system — keep it consistent.
+- **Key prefix display:** Shows `vfx_live_xxx` + `••••••••` dots (not ellipsis). Dots signal "hidden secret content."
+- **Revoke button:** Subtle outlined button by default, turns red on hover. Never red at rest.
+- **Revoked keys:** Shown at 40% opacity (audit trail). Not hidden.
+
+---
+
 ## Database Types — Never Edit Manually
 
 `src/types/database.types.ts` is auto-generated. After any schema change or migration, regenerate it:
@@ -245,7 +292,7 @@ If a change would break this chain, restructure rather than break the rule.
 supabase gen types typescript --local > src/types/database.types.ts
 ```
 
-Never edit this file by hand. Manual edits will be overwritten and will silently drift from the real schema.
+Never edit this file by hand.
 
 ---
 
@@ -272,19 +319,18 @@ Never edit this file by hand. Manual edits will be overwritten and will silently
 
 - No function longer than 50 lines
 - No file longer than 300 lines
-- No `console.log` committed — remove before every commit. This means debug output only.
-- `console.error` on the server IS allowed and expected for real errors — Vercel captures it in logs. Use it inside `withErrorHandler` and anywhere an unexpected failure must be recorded.
+- No `console.log` committed — remove before every commit
+- `console.error` on the server IS allowed for real errors — Vercel captures it in logs
 - No hardcoded values — use `lib/constants.ts` or environment variables
-- Standard error response shape on every API failure — use `errorResponse()` from `lib/errors.ts`, never raw Supabase errors, never inline JSON
-- Every Route Handler must be wrapped with `withErrorHandler()` from `lib/errors.ts` — this catches unexpected crashes and returns the standard error shape instead of a broken 500 response
-- Rate limiting on `POST /api/v1/validate`: query `usage_logs` to count requests by `api_key_id` in the last 60 seconds, return `RATE_LIMITED` if over limit. Vercel provides DDoS protection at the infrastructure level automatically.
+- Standard error response shape on every API failure — use `errorResponse()` from `lib/errors.ts`
+- Every Route Handler must be wrapped with `withErrorHandler()` from `lib/errors.ts`
+- Rate limiting on `POST /api/v1/validate`: 60 requests per 60 seconds per key (`RATE_LIMIT_PER_MINUTE` in constants)
 
 ---
 
 ## Design System — Non-Negotiable
 
 The full design system is defined in `DESIGN.md` at the project root. Read it before writing any frontend code.
-A visual preview is in `design-preview.html` — open it in a browser to see the design.
 
 ### Style: Swiss International Typographic Style. Light only. No dark mode.
 
@@ -319,33 +365,24 @@ Never invent a colour. Every colour used in the UI must come from this list.
 
 One font only: **Inter**. Already installed.
 
-- Headings: weight 700–900, `tracking-tight` (`-0.025em` and tighter as size increases)
+- Headings: weight 700–900, `tracking-tight`
 - Body: weight 400–500, normal tracking
 - Labels / stat card titles: `text-xs`, `font-semibold`, `uppercase`, `tracking-widest`
 - No italic anywhere — use weight contrast instead
-- No font other than Inter
 
 **Key sizes:**
-- Dashboard page title: `text-2xl font-bold` (24px / 700)
-- Dashboard section heading: `text-xl font-semibold` (20px / 600)
-- Card title: `text-lg font-medium` (18px / 500)
-- Body text: `text-base font-normal text-secondary` (16px / 400)
-- Stat card value: `text-4xl font-bold` or larger (36px+ / 700–800)
+- Dashboard page H1: `text-3xl font-bold tracking-tight` (established in Phase 5–7)
+- Dashboard section heading: `text-xl font-semibold`
+- Stat card value: `text-4xl font-bold` minimum
 - Landing hero: `text-5xl` to `text-7xl`, weight 800–900, `tracking-tight`
-
----
-
-### Spacing
-
-4px base grid. Use Tailwind spacing scale only — no arbitrary values.
 
 ---
 
 ### Border Radius
 
-`rounded-sm` (2px) everywhere. This is set as the default `--radius` CSS variable.
+`rounded-sm` (2px) everywhere.
 
-**Never use:** `rounded-lg`, `rounded-xl`, `rounded-2xl` — too soft, breaks the Swiss design language.
+**Never use:** `rounded-lg`, `rounded-xl`, `rounded-2xl`
 
 Exceptions:
 - Modals, dropdowns: `rounded` (4px)
@@ -355,39 +392,48 @@ Exceptions:
 
 ### Shadows
 
-- Cards on dashboard: `shadow-sm` only
+- Cards: `shadow-sm` only
 - Dropdowns and modals: `shadow-md` only
 - **Never use:** `shadow-lg`, `shadow-xl`, `shadow-2xl`
-
-When in doubt, use a border instead of a shadow.
 
 ---
 
 ### Buttons — 3 Variants Only
 
 ```
-Primary:     bg-primary text-white — one per view maximum
-Secondary:   bg-white border border-border — for secondary actions
-Destructive: bg-destructive text-white — always behind a confirmation dialog
+Primary:     bg-[#1A7A78] hover:bg-[#155E5C] text-white rounded-sm
+Secondary:   bg-white border border-[#D9D3C5] text-[#555047] rounded-sm
+Destructive: bg-[#B83232] hover:bg-[#8A2020] text-white rounded-sm — always behind a confirmation dialog
 ```
 
-Never create a fourth button variant. Never place two primary buttons side by side.
+Never create a fourth variant. Never place two primary buttons side by side.
 
 ---
 
 ### Components Quick Reference
 
-**Stat card:** White card, border, `shadow-sm`. Label: `text-xs font-semibold uppercase tracking-widest text-muted`. Value: `text-4xl font-bold` minimum.
+**Left-border accent card pattern (used on KeyCard, StatCard):**
+```
+flex overflow-hidden rounded-sm bg-white shadow-sm
+├── div w-[3px] bg-primary (or green/red)
+└── div flex-1 border border-l-0 border-[#D9D3C5] rounded-r-sm px-5 py-4/5
+```
 
 **Nav item active state:** `bg-[#EAF3F3] text-primary font-semibold border-l-2 border-primary`
 
-**Badge — valid:** `bg-[#EEF5E8] text-[#3A6A1A] border border-[#B8D49A]`
-
-**Badge — invalid:** `bg-[#FBF0EE] text-[#8A2020] border border-[#E8B4B0]`
+**Badge — valid:** `bg-[#EEF5E8] text-[#3A6A1A] border border-[#B8D49A]` + green dot
+**Badge — invalid:** `bg-[#FBF0EE] text-[#8A2020] border border-[#E8B4B0]` + red dot
 
 **Code block:** `bg-[#111111] text-[#F0ECE3]` — the only dark surface in the product.
 
-**Input focus:** `border-primary` + `ring-2 ring-primary/20`
+**Input focus:** `border-[#1A7A78]` + `ring-2 ring-[#1A7A78]/20`
+
+**Page header pattern (used on keys page + overview page):**
+```
+border-b border-[#D9D3C5] pb-6 mb-8
+├── h1 text-3xl font-bold tracking-tight text-[#111111]
+└── p  text-sm text-[#555047] mt-1.5
+```
 
 ---
 
@@ -401,15 +447,6 @@ Never create a fourth button variant. Never place two primary buttons side by si
 - More than 2 colours on a single component
 - Any font other than Inter
 - Hover states that move or animate elements — colour change only
-
----
-
-## Two Auth Systems — Never Mixed
-
-| Auth Type | Used For | Never Used For |
-|---|---|---|
-| Supabase session (httpOnly cookie) | Dashboard operations — keys, usage, settings | Validation endpoint |
-| API Key (X-API-Key header) | `POST /api/v1/validate` only | Dashboard operations |
 
 ---
 

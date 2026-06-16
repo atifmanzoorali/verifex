@@ -1,9 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import type { User, SupabaseClient } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/types/database.types';
 
 type AuthContextValue = {
   user: User | null;
@@ -15,7 +14,7 @@ const AuthContext = createContext<AuthContextValue>({ user: null, loading: true 
 export function AuthProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabaseRef = useRef<SupabaseClient<Database>>(createClient());
+  const supabaseRef = useRef(createClient());
 
   useEffect(() => {
     const supabase = supabaseRef.current;

@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
+
+export const metadata: Metadata = {
+  title: 'Reset password — Verifex',
+};
+
 export default function ForgotPasswordPage(): React.JSX.Element {
-  return <div>{/* ForgotPasswordForm component — built in Step 3 */}</div>;
+  return <ForgotPasswordForm />;
 }
