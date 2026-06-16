@@ -31,9 +31,13 @@ Read these before doing anything:
 
 ## Current Status
 
-**Phase 11 (Ship) is complete.** Verifex is live at https://verifex-puce.vercel.app. GitHub repo (atifmanzoorali/verifex) is connected to Vercel with auto-deploy on push to main. All 4 environment variables set in Vercel production. README updated with live URLs and correct paths (removed legacy `web/` folder references). next.config.ts duplicate removed (next.config.mjs is the active config). GitHub Actions CI runs on every push to main.
+**All 11 phases complete. Verifex is fully shipped.**
 
-**One manual step still required:** Add `https://verifex-puce.vercel.app/**` to Supabase auth redirect URLs (Authentication → URL Configuration in the Supabase dashboard at https://supabase.com/dashboard/project/ojskknebqzzrlpctecma/auth/url-configuration). Without this, email confirmation links will fail on the live site.
+- **Live URL:** https://verifex-puce.vercel.app
+- **GitHub:** https://github.com/atifmanzoorali/verifex
+- **Supabase project:** ojskknebqzzrlpctecma (redirect URLs configured for live domain)
+- **Auto-deploy:** GitHub main → Vercel (push to main triggers deployment automatically)
+- **CI:** GitHub Actions runs typecheck + lint + tests on every push to main
 
 **GitHub sync: All work committed and pushed on `main`.** Do not re-push anything already committed.
 
@@ -136,7 +140,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 
 ## What Is a Stub (Needs Building)
 
-*All stubs are now built. Phase 11 — Ship is next.*
+*Nothing. All phases complete. The project is live.*
 
 ---
 
@@ -237,7 +241,7 @@ verifex/
 ├── next.config.mjs                   complete
 ├── package.json                      complete
 ├── postcss.config.mjs                complete
-├── README.md                         stub — written in Phase 11
+├── README.md                         complete — live URLs, correct paths
 ├── tailwind.config.ts                complete
 ├── tsconfig.json                     complete — strict mode
 ├── vercel.json                       complete — security headers
