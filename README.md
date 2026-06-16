@@ -9,7 +9,7 @@ Open-source email validation API. Two-layer check: format validation + MX record
 Send an email address. Get back a structured response telling you whether it's valid, which checks passed, and why it failed if it did.
 
 ```bash
-curl -X POST https://verifex.app/api/v1/validate \
+curl -X POST https://verifex-puce.vercel.app/api/v1/validate \
   -H "X-API-Key: vfx_live_your_key_here" \
   -H "Content-Type: application/json" \
   -d '{"email": "user@example.com"}'
@@ -41,13 +41,13 @@ See [`docs/decisions.md`](docs/decisions.md) for why each major decision was mad
 
 ## Quick Start
 
-1. Register at [verifex.app](https://verifex.app)
+1. Register at [verifex-puce.vercel.app](https://verifex-puce.vercel.app)
 2. Go to your dashboard and create an API key
 3. Copy the key — it is shown once
 4. Call the API:
 
 ```bash
-curl -X POST https://verifex.app/api/v1/validate \
+curl -X POST https://verifex-puce.vercel.app/api/v1/validate \
   -H "X-API-Key: YOUR_KEY" \
   -H "Content-Type: application/json" \
   -d '{"email": "test@gmail.com"}'
