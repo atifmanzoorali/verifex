@@ -44,7 +44,7 @@ export const POST = withErrorHandler(async (request: NextRequest): Promise<NextR
   const json = await request.json();
   const parsed = CreateKeySchema.safeParse(json);
   if (!parsed.success) {
-    return errorResponse(parsed.error.errors[0].message, 'VALIDATION_ERROR');
+    return errorResponse(parsed.error.errors[0]?.message ?? 'Validation failed', 'VALIDATION_ERROR');
   }
 
   const { count, error: countError } = await supabase
@@ -94,7 +94,7 @@ export const DELETE = withErrorHandler(async (request: NextRequest): Promise<Nex
   const json = await request.json();
   const parsed = RevokeKeySchema.safeParse(json);
   if (!parsed.success) {
-    return errorResponse(parsed.error.errors[0].message, 'VALIDATION_ERROR');
+    return errorResponse(parsed.error.errors[0]?.message ?? 'Validation failed', 'VALIDATION_ERROR');
   }
 
   const { data: existing } = await supabase

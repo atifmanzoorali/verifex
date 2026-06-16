@@ -5,6 +5,7 @@ import { EndpointCard } from './EndpointCard';
 type Props = {
   sections: DocsSection[];
   errorCodes: DocsErrorCode[];
+  baseUrl: string;
 };
 
 const STATUS_STYLES: Record<number, string> = {
@@ -42,11 +43,11 @@ function SidebarNav({ sections }: { sections: DocsSection[] }): React.JSX.Elemen
   );
 }
 
-function BaseUrl(): React.JSX.Element {
+function BaseUrl({ appUrl }: { appUrl: string }): React.JSX.Element {
   return (
     <div className="mb-4 rounded-sm border border-[#D9D3C5] bg-white px-4 py-3">
       <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-[#8A8278]">Base URL</p>
-      <code className="font-mono text-sm text-[#1A7A78]">https://verifex.app/api/v1</code>
+      <code className="font-mono text-sm text-[#1A7A78]">{appUrl}/api/v1</code>
     </div>
   );
 }
@@ -110,7 +111,7 @@ function ErrorCodesSection({ codes }: { codes: DocsErrorCode[] }): React.JSX.Ele
   );
 }
 
-export function DocsLayout({ sections, errorCodes }: Props): React.JSX.Element {
+export function DocsLayout({ sections, errorCodes, baseUrl }: Props): React.JSX.Element {
   return (
     <div className="flex gap-10">
       {/* Sidebar — hidden on mobile */}
@@ -124,7 +125,7 @@ export function DocsLayout({ sections, errorCodes }: Props): React.JSX.Element {
       <div className="flex-1 min-w-0 space-y-6">
         {/* Intro cards */}
         <div className="space-y-3 pb-4">
-          <BaseUrl />
+          <BaseUrl appUrl={baseUrl} />
           <ResponseEnvelope />
         </div>
 

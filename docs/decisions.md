@@ -50,3 +50,19 @@ Validation stops at MX record lookup. It does not attempt to open an SMTP connec
 All endpoints are prefixed with `/api/v1/` even though there is only one version.
 
 **Why:** Retrofitting version prefixes into a live API breaks existing integrations. Starting versioned costs nothing and keeps the option open to ship `/api/v2/` without breaking callers.
+
+---
+
+## 7. In-database rate limiting (no Redis)
+
+Rate limiting on `POST /api/v1/validate` is implemented by counting rows in `usage_logs` for the calling key in the past 60 seconds. There is no separate Redis or in-memory store.
+
+**Why:** Adding Redis would mean a second infrastructure dependency, a second deployment concern, and a second failure mode. At this scale, a single SQL count query (`SELECT COUNT(*) ... WHERE created_at > now() - interval '60s'`) is fast enough and avoids the operational overhead. If the product scales to millions of requests, migrating to a dedicated rate-limit store is a single-service replacement with no API changes.
+
+---
+
+## 8. Soft delete for API keys
+
+Revoking an API key sets `is_active = false`. The row is never hard-deleted.
+
+**Why:** `usage_logs` rows reference `api_key_id` with a foreign key. Hard-deleting the key row would either cascade-delete the usage history (losing the audit trail) or require nulling the FK (making usage logs unattributable). Soft delete preserves the full history while making the key unusable. Revoked keys are shown at reduced opacity in the dashboard as an explicit audit trail, not hidden.

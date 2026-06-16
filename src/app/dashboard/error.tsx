@@ -9,6 +9,7 @@ type ErrorPageProps = {
 
 export default function DashboardErrorPage({ error, reset }: ErrorPageProps): React.JSX.Element {
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.error('[Dashboard Error]', error);
   }, [error]);
 

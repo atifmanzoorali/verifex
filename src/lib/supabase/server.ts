@@ -1,11 +1,15 @@
 import { createServerClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { env } from '@/lib/env';
 import type { Database } from '@/types/database.types';
 
-export async function createClient(): Promise<ReturnType<typeof createServerClient<Database>>> {
+export async function createClient(): Promise<SupabaseClient<Database>> {
   const cookieStore = await cookies();
 
+  // Type assertion required: @supabase/ssr@0.5.x was built against the
+  // 3-param SupabaseClient generic; supabase-js@2.108 uses 4 params.
+  // Runtime behaviour is identical — only the TypeScript signature diverged.
   return createServerClient<Database>(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -21,5 +25,5 @@ export async function createClient(): Promise<ReturnType<typeof createServerClie
         },
       },
     }
-  );
+  ) as unknown as SupabaseClient<Database>;
 }

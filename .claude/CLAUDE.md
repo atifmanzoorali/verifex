@@ -31,9 +31,11 @@ Read these before doing anything:
 
 ## Current Status
 
-**Phase 9 (API Documentation) is complete.** Public docs at `/docs` (unauthenticated, sticky header, back-to-home nav). Dashboard docs at `/dashboard/docs` (authenticated, shows real key prefix in curl examples). Both use DocsLayout with sticky sidebar nav, EndpointCard per endpoint, and CodeBlock for Shiki-highlighted code. All 6 endpoints documented: validate, list keys, create key, revoke key, get usage, delete account. Error codes table included.
+**Phase 10 (Quality Assurance) is complete.** TypeScript compiles with zero errors (fixed database.types.ts to match supabase-js@2.108 GenericSchema contract; fixed SSR client type assertion). ESLint passes with zero warnings (added argsIgnorePattern for `_` params, overrides for generated shadcn files, eslint-disable for legitimate console.error calls). 20 tests pass across 3 files — validate-mx.test.ts rewritten with mocks to remove network dependency and expanded with edge cases; keys.service.test.ts expanded from 2 to 8 tests. No console.log in codebase. Hardcoded verifex.app URL removed — now reads from env.NEXT_PUBLIC_APP_URL. Refactored validate/route.ts (3 helper functions) and docs-data.ts (4 section builders) to bring all functions under 50 lines. docs/decisions.md updated with 2 new decisions (in-database rate limiting, soft-delete for API keys).
 
-**Next step: Phase 10 of ROADMAP.md — Quality Assurance.**
+**GitHub sync: Phase 10 work committed on `main`.** See commit after `b245c14`.
+
+**Next step: Phase 11 of ROADMAP.md — Ship.**
 
 ### Phase Progress
 
@@ -47,7 +49,7 @@ Read these before doing anything:
 - [x] Phase 7 — Usage Dashboard
 - [x] Phase 8 — Settings
 - [x] Phase 9 — API Documentation
-- [ ] Phase 10 — Quality Assurance
+- [x] Phase 10 — Quality Assurance
 - [ ] Phase 11 — Ship
 
 See `ROADMAP.md` for the full detail of each phase.

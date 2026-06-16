@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getDocsData, ERROR_CODES } from '@/lib/docs-data';
 import { DocsLayout } from '@/components/docs/DocsLayout';
 import { createClient } from '@/lib/supabase/server';
+import { env } from '@/lib/env';
 
 export default async function DashboardDocsPage(): Promise<React.JSX.Element> {
   const supabase = await createClient();
@@ -42,7 +43,7 @@ export default async function DashboardDocsPage(): Promise<React.JSX.Element> {
         )}
       </div>
 
-      <DocsLayout sections={sections} errorCodes={ERROR_CODES} />
+      <DocsLayout sections={sections} errorCodes={ERROR_CODES} baseUrl={env.NEXT_PUBLIC_APP_URL} />
     </div>
   );
 }

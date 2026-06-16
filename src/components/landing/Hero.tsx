@@ -7,7 +7,13 @@ import { Button } from '@/components/ui/button';
 
 const FEATURES = ['Format check', 'MX record lookup', '~20ms response', 'Free & open source'] as const;
 
-function fadeUp(delay: number) {
+type FadeUpProps = {
+  initial: { opacity: number; y: number };
+  animate: { opacity: number; y: number };
+  transition: { duration: number; ease: string; delay: number };
+};
+
+function fadeUp(delay: number): FadeUpProps {
   return {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },

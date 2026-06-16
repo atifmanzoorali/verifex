@@ -21,6 +21,7 @@ export type Database = {
         Update: {
           full_name?: string | null;
         };
+        Relationships: [];
       };
       api_keys: {
         Row: {
@@ -47,6 +48,7 @@ export type Database = {
           is_active?: boolean;
           last_used_at?: string | null;
         };
+        Relationships: [];
       };
       usage_logs: {
         Row: {
@@ -72,7 +74,20 @@ export type Database = {
           created_at?: string;
         };
         Update: Record<string, never>;
+        Relationships: [];
       };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 };

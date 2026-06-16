@@ -35,6 +35,7 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
     try {
       return await handler(request);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('[API Error]', request.method, request.nextUrl.pathname, err);
       return errorResponse('Something went wrong', 'INTERNAL_ERROR');
     }
