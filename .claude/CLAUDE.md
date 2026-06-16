@@ -31,9 +31,9 @@ Read these before doing anything:
 
 ## Current Status
 
-**Phase 10 (Quality Assurance) is complete.** TypeScript compiles with zero errors (fixed database.types.ts to match supabase-js@2.108 GenericSchema contract; fixed SSR client type assertion). ESLint passes with zero warnings (added argsIgnorePattern for `_` params, overrides for generated shadcn files, eslint-disable for legitimate console.error calls). 20 tests pass across 3 files — validate-mx.test.ts rewritten with mocks to remove network dependency and expanded with edge cases; keys.service.test.ts expanded from 2 to 8 tests. No console.log in codebase. Hardcoded verifex.app URL removed — now reads from env.NEXT_PUBLIC_APP_URL. Refactored validate/route.ts (3 helper functions) and docs-data.ts (4 section builders) to bring all functions under 50 lines. docs/decisions.md updated with 2 new decisions (in-database rate limiting, soft-delete for API keys).
+**Phase 10 (Quality Assurance) is complete.** TypeScript compiles with zero errors (fixed database.types.ts to match supabase-js@2.108 GenericSchema contract; fixed SSR client type assertion for @supabase/ssr@0.5.x vs supabase-js@2.108 generic mismatch). ESLint passes with zero warnings (added argsIgnorePattern for `_` params, overrides for generated shadcn files, eslint-disable for legitimate console.error calls). 20 tests pass across 3 files — validate-mx.test.ts rewritten with vi.mock('dns') to remove network dependency and expanded to 6 tests; keys.service.test.ts expanded from 2 to 8 tests. No console.log in codebase. Hardcoded verifex.app URL removed — now reads from env.NEXT_PUBLIC_APP_URL. Refactored validate/route.ts (3 helper functions: resolveApiKey, checkRateLimit, logValidation) and docs-data.ts (4 section builders: buildValidateSection, buildKeysSection, buildUsageSection, buildAccountSection) to bring all functions under 50 lines. docs/decisions.md updated with 2 new decisions (in-database rate limiting, soft-delete for API keys).
 
-**GitHub sync: Phase 10 work committed on `main`.** See commit after `b245c14`.
+**GitHub sync: All work through Phase 10 committed and pushed on `main`.** Do not re-push anything already committed.
 
 **Next step: Phase 11 of ROADMAP.md — Ship.**
 
@@ -69,9 +69,9 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/lib/validate-format.ts` | Email format check with 254-char length limit |
 | `src/lib/validate-mx.ts` | DNS MX record lookup via `dns/promises` |
 | `src/lib/shiki.ts` | Server-side syntax highlighter singleton |
-| `src/lib/docs-data.ts` | Pre-highlighted code examples for docs page |
+| `src/lib/docs-data.ts` | Pre-highlighted code examples for docs; `getDocsData(keyPrefix?)` builds 4 sections via extracted builder functions; uses `env.NEXT_PUBLIC_APP_URL` (no hardcoded URLs) |
 | `src/lib/supabase/client.ts` | Browser Supabase client — reads `process.env.NEXT_PUBLIC_*` directly (NOT via `env.ts` — that causes a client-side crash) |
-| `src/lib/supabase/server.ts` | Cookie-based server Supabase client — used for all dashboard route handlers |
+| `src/lib/supabase/server.ts` | Cookie-based server Supabase client — returns `SupabaseClient<Database>` with `as unknown as` type assertion (required: @supabase/ssr@0.5.x built against 3-param generic; supabase-js@2.108 uses 4 params — runtime is identical) |
 | `src/lib/supabase/service.ts` | Service role Supabase client singleton — bypasses RLS, used by validate endpoint only (no session cookie) |
 | `src/middleware.ts` | Route protection + session refresh — complete |
 | `src/app/auth/callback/route.ts` | Supabase email confirmation handler — complete |
@@ -89,12 +89,12 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/types/api.types.ts` | Standard API response types |
 | `src/types/key.types.ts` | API key types |
 | `src/types/validation.types.ts` | Validation result types |
-| `src/types/database.types.ts` | Supabase DB types (regenerate after schema changes) |
+| `src/types/database.types.ts` | Supabase DB types — hand-maintained to satisfy supabase-js@2.108 `GenericSchema` contract: all tables require `Relationships: []`; empty sections (`Views`, `Functions`, `Enums`, `CompositeTypes`) use `{ [_ in never]: never }` not `Record<string, never>` |
 | `supabase/migrations/0001_initial_schema.sql` | Full schema with RLS — complete |
 | `supabase/config.toml` | Supabase CLI config — complete |
 | `tests/validate-format.test.ts` | 6 tests including length check |
-| `tests/validate-mx.test.ts` | 2 tests — real domain + fake domain |
-| `tests/keys.service.test.ts` | Key format tests |
+| `tests/validate-mx.test.ts` | 6 tests — uses `vi.mock('dns')` (no live DNS calls); covers MX found, sorted by priority, no MX, DNS throws, empty domain, numeric domain |
+| `tests/keys.service.test.ts` | 8 tests — key prefix format, random bytes hex length, SHA-256 hash length/format/determinism/collision resistance, MAX_API_KEYS_PER_USER constant, 12-char prefix slice |
 | `src/app/page.tsx` | Landing page — assembles all 6 sections, uses Suspense for ResponsePreview |
 | `src/components/landing/Navbar.tsx` | Pill navbar — floating, logo left, links + CTA right, Framer Motion entrance |
 | `src/components/landing/Hero.tsx` | Hero section — full viewport, Swiss typography, teal depth blur, Framer Motion stagger |
@@ -118,7 +118,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/components/keys/CreateKeyModal.tsx` | Two-state dialog: name form → raw key revealed once with copy button |
 | `src/components/keys/RevokeDialog.tsx` | Confirmation dialog before revoking a key |
 | `src/app/dashboard/keys/page.tsx` | text-3xl H1, active key count (X of 10), separator, empty state with Key icon; uses `useApiKeys()` |
-| `src/app/api/v1/validate/route.ts` | POST — X-API-Key auth, rate limit (60/min), format check, MX check, usage logging |
+| `src/app/api/v1/validate/route.ts` | POST — X-API-Key auth, rate limit (60/min), format check, MX check, usage logging; refactored with 3 extracted helpers: `resolveApiKey`, `checkRateLimit`, `logValidation` |
 | `src/app/api/v1/usage/route.ts` | GET — session auth, summary counts from ALL logs, paginated rows |
 | `src/components/usage/StatCard.tsx` | 3px coloured left-border accent (teal/green/red), animated loading skeleton |
 | `src/components/usage/ActivityTable.tsx` | Table: domain (mono), valid/invalid badge, duration, timestamp; alternating rows |
@@ -128,17 +128,15 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/components/settings/PasswordForm.tsx` | React Hook Form + Zod — current + new + confirm; calls `updatePassword()` which re-auths then updates |
 | `src/components/settings/DeleteAccountDialog.tsx` | Confirmation dialog — user must type "delete my account"; calls DELETE /api/v1/account, then signOut, then redirects to / |
 | `src/app/dashboard/settings/page.tsx` | Three sections: Profile, Password, Danger Zone — complete |
-
-| `src/lib/docs-data.ts` | All 6 endpoints pre-highlighted via Shiki; `getDocsData(keyPrefix?)` substitutes real key prefix in curl examples |
 | `src/components/docs/CodeBlock.tsx` | Renders Shiki HTML in dark `bg-[#111111]` container |
 | `src/components/docs/EndpointCard.tsx` | Method badge (coloured), path, description, auth note, stacked CodeBlocks |
-| `src/components/docs/DocsLayout.tsx` | Sticky sidebar (anchor links), BaseUrl card, ResponseEnvelope card, endpoint sections, error codes table |
-| `src/app/docs/page.tsx` | Public Server Component — sticky header with back nav and CTA, full docs below |
-| `src/app/dashboard/docs/page.tsx` | Dashboard Server Component — reads user's first active key prefix, passes to getDocsData |
+| `src/components/docs/DocsLayout.tsx` | Sticky sidebar (anchor links), BaseUrl card, ResponseEnvelope card, endpoint sections, error codes table; accepts `baseUrl` prop |
+| `src/app/docs/page.tsx` | Public Server Component — sticky header with back nav and CTA, full docs below; passes `baseUrl={env.NEXT_PUBLIC_APP_URL}` |
+| `src/app/dashboard/docs/page.tsx` | Dashboard Server Component — reads user's first active key prefix, passes to getDocsData; passes `baseUrl={env.NEXT_PUBLIC_APP_URL}` |
 
 ## What Is a Stub (Needs Building)
 
-*All stubs are now built. Phase 10 — Quality Assurance is next.*
+*All stubs are now built. Phase 11 — Ship is next.*
 
 ---
 
@@ -160,7 +158,7 @@ verifex/
 │   │   ├── globals.css               complete
 │   │   ├── error.tsx                 complete — root error boundary
 │   │   ├── not-found.tsx             complete — custom 404
-│   │   ├── docs/page.tsx             stub — Phase 9
+│   │   ├── docs/page.tsx             complete — Phase 9
 │   │   ├── (auth)/
 │   │   │   ├── layout.tsx            complete — centered layout
 │   │   │   ├── login/page.tsx        complete
@@ -172,20 +170,20 @@ verifex/
 │   │   │   ├── page.tsx              complete — Overview (StatCards + ActivityTable)
 │   │   │   ├── error.tsx             complete — dashboard error boundary
 │   │   │   ├── keys/page.tsx         complete — API Key Management
-│   │   │   ├── docs/page.tsx         stub — Phase 9
-│   │   │   └── settings/page.tsx     stub — Phase 8
+│   │   │   ├── docs/page.tsx         complete — Phase 9
+│   │   │   └── settings/page.tsx     complete — Phase 8
 │   │   └── api/v1/
 │   │       ├── validate/route.ts     complete — email validation engine
 │   │       ├── keys/route.ts         complete — GET/POST/DELETE
 │   │       ├── usage/route.ts        complete — GET with summary + pagination
-│   │       └── account/route.ts      stub — Phase 8
+│   │       └── account/route.ts      complete — Phase 8
 │   ├── components/
 │   │   ├── landing/                  complete — all 6 sections built
 │   │   ├── dashboard/                complete — Sidebar, Topbar, MobileDrawer, DashboardShell
 │   │   ├── keys/                     complete — KeyCard, CreateKeyModal, RevokeDialog
 │   │   ├── usage/                    complete — StatCard, ActivityTable
-│   │   ├── settings/                 empty — Phase 8
-│   │   ├── docs/                     empty — Phase 9
+│   │   ├── settings/                 complete — ProfileForm, PasswordForm, DeleteAccountDialog
+│   │   ├── docs/                     complete — CodeBlock, EndpointCard, DocsLayout
 │   │   └── ui/                       complete — shadcn components
 │   ├── services/
 │   │   ├── auth.service.ts           complete
@@ -198,7 +196,7 @@ verifex/
 │   ├── lib/
 │   │   ├── supabase/
 │   │   │   ├── client.ts             complete — browser client
-│   │   │   ├── server.ts             complete — cookie-based server client
+│   │   │   ├── server.ts             complete — cookie-based server client (type assertion for ssr@0.5.x compat)
 │   │   │   └── service.ts            complete — service role client (validate endpoint only)
 │   │   ├── constants.ts              complete
 │   │   ├── env.ts                    complete — startup env validation
@@ -206,33 +204,33 @@ verifex/
 │   │   ├── validate-format.ts        complete — regex + 254-char limit
 │   │   ├── validate-mx.ts            complete — DNS MX lookup
 │   │   ├── shiki.ts                  complete
-│   │   ├── docs-data.ts              complete
+│   │   ├── docs-data.ts              complete — 4 section builders, env.NEXT_PUBLIC_APP_URL
 │   │   └── utils.ts                  complete — cn, formatDate, formatDuration
 │   ├── middleware.ts                 complete
 │   └── types/
 │       ├── api.types.ts              complete
 │       ├── key.types.ts              complete
 │       ├── validation.types.ts       complete
-│       └── database.types.ts         complete — regenerate after schema changes
+│       └── database.types.ts         complete — hand-maintained for supabase-js@2.108 GenericSchema contract
 ├── supabase/
 │   ├── config.toml                   complete
 │   └── migrations/
 │       └── 0001_initial_schema.sql   complete — profiles, api_keys, usage_logs + RLS
 ├── tests/
 │   ├── validate-format.test.ts       complete — 6 tests
-│   ├── validate-mx.test.ts           complete — 2 tests
-│   └── keys.service.test.ts          complete — 3 tests
+│   ├── validate-mx.test.ts           complete — 6 tests (mocked DNS)
+│   └── keys.service.test.ts          complete — 8 tests
 ├── public/
 ├── docs/
 │   ├── architecture.md               complete
 │   ├── api-contracts.md              complete
-│   └── decisions.md                  complete
+│   └── decisions.md                  complete — 8 decisions documented
 ├── DESIGN.md                         complete — full design system
 ├── ROADMAP.md                        complete — phase-by-phase build plan
 ├── Verifex_Brief.md                  complete — full product brief
 ├── design-preview.html               complete — open in browser to see design
 ├── .env.example                      complete
-├── .eslintrc.json                    complete
+├── .eslintrc.json                    complete — argsIgnorePattern for _ params, overrides for shadcn ui files
 ├── .gitignore                        complete
 ├── .prettierrc                       complete
 ├── LICENSE                           complete
@@ -286,15 +284,15 @@ These were deliberate design choices made during Phase 4–7:
 
 ---
 
-## Database Types — Never Edit Manually
+## Database Types — Critical Constraint
 
-`src/types/database.types.ts` is auto-generated. After any schema change or migration, regenerate it:
+`src/types/database.types.ts` must satisfy the `GenericSchema` interface in supabase-js@2.108. **Do not regenerate with `supabase gen types`** — the CLI output format differs from what this version requires and will break TypeScript compilation.
 
-```bash
-supabase gen types typescript --local > src/types/database.types.ts
-```
+**Required structure:**
+- Every table must have `Relationships: []`
+- Empty sections (`Views`, `Functions`, `Enums`, `CompositeTypes`) must use `{ [_ in never]: never }` — NOT `Record<string, never>`
 
-Never edit this file by hand.
+If the schema changes (new table or column), edit the file manually following the existing pattern.
 
 ---
 
