@@ -93,7 +93,7 @@ export const POST = withErrorHandler(async (request: NextRequest): Promise<NextR
     await logValidation({ keyId: keyRow.id, userId: keyRow.user_id, domain, result: 'invalid', formatCheck: false, mxCheck: false, durationMs }, supabase);
     const body: ApiSuccess<ValidationResult> = {
       success: true,
-      data: { valid: false, email, domain, checks: { format: false, mx: false }, mx_records: [], reason: formatResult.reason },
+      data: { valid: false, email, domain, checks: { format: false, mx: false }, mx_records: [], duration_ms: durationMs, reason: formatResult.reason },
     };
     return NextResponse.json(body);
   }
@@ -107,7 +107,7 @@ export const POST = withErrorHandler(async (request: NextRequest): Promise<NextR
 
   const body: ApiSuccess<ValidationResult> = {
     success: true,
-    data: { valid, email, domain, checks: { format: true, mx: valid }, mx_records: mxResult.records, reason: valid ? undefined : mxResult.reason },
+    data: { valid, email, domain, checks: { format: true, mx: valid }, mx_records: mxResult.records, duration_ms: durationMs, reason: valid ? undefined : mxResult.reason },
   };
   return NextResponse.json(body);
 });

@@ -21,10 +21,10 @@ Auth: `X-API-Key` header
 { "email": "user@example.com" }
 
 // Valid
-{ "success": true, "data": { "valid": true, "email": "user@example.com", "domain": "example.com", "checks": { "format": true, "mx": true }, "mx_records": ["mail.example.com"] } }
+{ "success": true, "data": { "valid": true, "email": "user@example.com", "domain": "example.com", "checks": { "format": true, "mx": true }, "mx_records": ["mail.example.com"], "duration_ms": 18 } }
 
 // Invalid
-{ "success": true, "data": { "valid": false, "email": "user@fake.xyz", "domain": "fake.xyz", "checks": { "format": true, "mx": false }, "mx_records": [], "reason": "No MX records found for domain" } }
+{ "success": true, "data": { "valid": false, "email": "user@fake.xyz", "domain": "fake.xyz", "checks": { "format": true, "mx": false }, "mx_records": [], "duration_ms": 22, "reason": "No MX records found for domain" } }
 ```
 
 ---
@@ -46,7 +46,7 @@ Auth: Supabase session cookie
 { "name": "Production" }
 
 // Response — raw key shown once, never again
-{ "success": true, "data": { "id": "uuid", "name": "Production", "key": "vfx_live_...", "key_prefix": "vfx_live_xxxx", "created_at": "..." } }
+{ "success": true, "data": { "id": "uuid", "name": "Production", "key": "vfx_live_...", "key_prefix": "vfx_live_xxxx", "is_active": true, "created_at": "...", "last_used_at": null } }
 ```
 
 ## DELETE /api/v1/keys
@@ -58,7 +58,7 @@ Auth: Supabase session cookie
 { "id": "uuid" }
 
 // Response
-{ "success": true, "data": { "message": "Key revoked." } }
+{ "success": true, "data": null }
 ```
 
 ---
@@ -78,7 +78,7 @@ Auth: Supabase session cookie. Query params: `limit` (default 20, max 100), `off
 Auth: Supabase session cookie
 
 ```json
-{ "success": true, "data": { "message": "Account deleted." } }
+{ "success": true, "data": null }
 ```
 
 Deletes in FK-safe order: usage_logs → api_keys → profiles → auth user.

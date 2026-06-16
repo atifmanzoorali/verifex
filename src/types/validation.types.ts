@@ -16,5 +16,6 @@ export type ValidationResult = {
     mx: boolean;
   };
   mx_records: string[];
+  duration_ms: number;
   reason?: string;
 };

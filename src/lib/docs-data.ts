@@ -86,12 +86,14 @@ const KEYS_CREATE_RESPONSE = `{
     "name": "Production",
     "key": "vfx_live_a1b2c3d4...",
     "key_prefix": "vfx_live_a1b2",
-    "created_at": "2024-01-15T10:30:00Z"
+    "is_active": true,
+    "created_at": "2024-01-15T10:30:00Z",
+    "last_used_at": null
   }
 }`;
 
 const KEYS_REVOKE_BODY     = `{ "id": "a1b2c3d4-..." }`;
-const KEYS_REVOKE_RESPONSE = `{ "success": true, "data": { "message": "Key revoked." } }`;
+const KEYS_REVOKE_RESPONSE = `{ "success": true, "data": null }`;
 
 const USAGE_RESPONSE = `{
   "success": true,
