@@ -72,7 +72,8 @@ curl -X POST https://verifex.app/api/v1/validate \
 ## Running Tests
 
 ```bash
-cd web
+git clone https://github.com/atifmanzoorali/verifex
+cd verifex
 npm install
 npm run test
 ```
@@ -83,7 +84,7 @@ npm run test
 
 ```bash
 git clone https://github.com/atifmanzoorali/verifex
-cd verifex/web
+cd verifex
 cp .env.example .env.local
 # Fill in your Supabase credentials in .env.local
 npm install
