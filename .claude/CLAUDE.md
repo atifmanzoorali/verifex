@@ -31,13 +31,11 @@ Read these before doing anything:
 
 ## Current Status
 
-**Phase 10 (Quality Assurance) is complete.** TypeScript compiles with zero errors (fixed database.types.ts to match supabase-js@2.108 GenericSchema contract; fixed SSR client type assertion for @supabase/ssr@0.5.x vs supabase-js@2.108 generic mismatch). ESLint passes with zero warnings (added argsIgnorePattern for `_` params, overrides for generated shadcn files, eslint-disable for legitimate console.error calls). 20 tests pass across 3 files — validate-mx.test.ts rewritten with vi.mock('dns') to remove network dependency and expanded to 6 tests; keys.service.test.ts expanded from 2 to 8 tests. No console.log in codebase. Hardcoded verifex.app URL removed — now reads from env.NEXT_PUBLIC_APP_URL. Refactored validate/route.ts (3 helper functions: resolveApiKey, checkRateLimit, logValidation) and docs-data.ts (4 section builders: buildValidateSection, buildKeysSection, buildUsageSection, buildAccountSection) to bring all functions under 50 lines. docs/decisions.md updated with 2 new decisions (in-database rate limiting, soft-delete for API keys).
+**Phase 11 (Ship) is complete.** Verifex is live at https://verifex-puce.vercel.app. GitHub repo (atifmanzoorali/verifex) is connected to Vercel with auto-deploy on push to main. All 4 environment variables set in Vercel production. README updated with live URLs and correct paths (removed legacy `web/` folder references). next.config.ts duplicate removed (next.config.mjs is the active config). GitHub Actions CI runs on every push to main.
 
-**Post-Phase 10 docs audit complete.** Four discrepancies found and fixed between the docs and the actual API: (1) `duration_ms` was tracked internally but never returned in the validate response — added to `ValidationResult` type and both response paths in validate/route.ts; (2) revoke key response in docs showed `{ "message": "Key revoked." }` but actual route returns `null` — fixed in docs-data.ts; (3) create key response example was missing `is_active` and `last_used_at` fields — fixed; (4) api-contracts.md updated to match all of the above. TypeScript still compiles clean after these changes.
+**One manual step still required:** Add `https://verifex-puce.vercel.app/**` to Supabase auth redirect URLs (Authentication → URL Configuration in the Supabase dashboard at https://supabase.com/dashboard/project/ojskknebqzzrlpctecma/auth/url-configuration). Without this, email confirmation links will fail on the live site.
 
 **GitHub sync: All work committed and pushed on `main`.** Do not re-push anything already committed.
-
-**Next step: Phase 11 of ROADMAP.md — Ship.**
 
 ### Phase Progress
 
@@ -52,7 +50,7 @@ Read these before doing anything:
 - [x] Phase 8 — Settings
 - [x] Phase 9 — API Documentation
 - [x] Phase 10 — Quality Assurance
-- [ ] Phase 11 — Ship
+- [x] Phase 11 — Ship
 
 See `ROADMAP.md` for the full detail of each phase.
 
