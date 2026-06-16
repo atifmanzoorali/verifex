@@ -33,7 +33,9 @@ Read these before doing anything:
 
 **Phase 10 (Quality Assurance) is complete.** TypeScript compiles with zero errors (fixed database.types.ts to match supabase-js@2.108 GenericSchema contract; fixed SSR client type assertion for @supabase/ssr@0.5.x vs supabase-js@2.108 generic mismatch). ESLint passes with zero warnings (added argsIgnorePattern for `_` params, overrides for generated shadcn files, eslint-disable for legitimate console.error calls). 20 tests pass across 3 files — validate-mx.test.ts rewritten with vi.mock('dns') to remove network dependency and expanded to 6 tests; keys.service.test.ts expanded from 2 to 8 tests. No console.log in codebase. Hardcoded verifex.app URL removed — now reads from env.NEXT_PUBLIC_APP_URL. Refactored validate/route.ts (3 helper functions: resolveApiKey, checkRateLimit, logValidation) and docs-data.ts (4 section builders: buildValidateSection, buildKeysSection, buildUsageSection, buildAccountSection) to bring all functions under 50 lines. docs/decisions.md updated with 2 new decisions (in-database rate limiting, soft-delete for API keys).
 
-**GitHub sync: All work through Phase 10 committed and pushed on `main`.** Do not re-push anything already committed.
+**Post-Phase 10 docs audit complete.** Four discrepancies found and fixed between the docs and the actual API: (1) `duration_ms` was tracked internally but never returned in the validate response — added to `ValidationResult` type and both response paths in validate/route.ts; (2) revoke key response in docs showed `{ "message": "Key revoked." }` but actual route returns `null` — fixed in docs-data.ts; (3) create key response example was missing `is_active` and `last_used_at` fields — fixed; (4) api-contracts.md updated to match all of the above. TypeScript still compiles clean after these changes.
+
+**GitHub sync: All work committed and pushed on `main`.** Do not re-push anything already committed.
 
 **Next step: Phase 11 of ROADMAP.md — Ship.**
 
@@ -69,7 +71,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/lib/validate-format.ts` | Email format check with 254-char length limit |
 | `src/lib/validate-mx.ts` | DNS MX record lookup via `dns/promises` |
 | `src/lib/shiki.ts` | Server-side syntax highlighter singleton |
-| `src/lib/docs-data.ts` | Pre-highlighted code examples for docs; `getDocsData(keyPrefix?)` builds 4 sections via extracted builder functions; uses `env.NEXT_PUBLIC_APP_URL` (no hardcoded URLs) |
+| `src/lib/docs-data.ts` | Pre-highlighted code examples for docs; `getDocsData(keyPrefix?)` builds 4 sections via extracted builder functions; uses `env.NEXT_PUBLIC_APP_URL` (no hardcoded URLs); all response shapes match actual route handler output |
 | `src/lib/supabase/client.ts` | Browser Supabase client — reads `process.env.NEXT_PUBLIC_*` directly (NOT via `env.ts` — that causes a client-side crash) |
 | `src/lib/supabase/server.ts` | Cookie-based server Supabase client — returns `SupabaseClient<Database>` with `as unknown as` type assertion (required: @supabase/ssr@0.5.x built against 3-param generic; supabase-js@2.108 uses 4 params — runtime is identical) |
 | `src/lib/supabase/service.ts` | Service role Supabase client singleton — bypasses RLS, used by validate endpoint only (no session cookie) |
@@ -88,7 +90,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/services/usage.service.ts` | Usage service functions + `UsageSummary`, `UsageLog`, `UsageResponse` types — complete |
 | `src/types/api.types.ts` | Standard API response types |
 | `src/types/key.types.ts` | API key types |
-| `src/types/validation.types.ts` | Validation result types |
+| `src/types/validation.types.ts` | Validation result types — `ValidationResult` includes `duration_ms: number` |
 | `src/types/database.types.ts` | Supabase DB types — hand-maintained to satisfy supabase-js@2.108 `GenericSchema` contract: all tables require `Relationships: []`; empty sections (`Views`, `Functions`, `Enums`, `CompositeTypes`) use `{ [_ in never]: never }` not `Record<string, never>` |
 | `supabase/migrations/0001_initial_schema.sql` | Full schema with RLS — complete |
 | `supabase/config.toml` | Supabase CLI config — complete |
@@ -118,7 +120,7 @@ These files have real, complete logic. Do not overwrite or recreate them.
 | `src/components/keys/CreateKeyModal.tsx` | Two-state dialog: name form → raw key revealed once with copy button |
 | `src/components/keys/RevokeDialog.tsx` | Confirmation dialog before revoking a key |
 | `src/app/dashboard/keys/page.tsx` | text-3xl H1, active key count (X of 10), separator, empty state with Key icon; uses `useApiKeys()` |
-| `src/app/api/v1/validate/route.ts` | POST — X-API-Key auth, rate limit (60/min), format check, MX check, usage logging; refactored with 3 extracted helpers: `resolveApiKey`, `checkRateLimit`, `logValidation` |
+| `src/app/api/v1/validate/route.ts` | POST — X-API-Key auth, rate limit (60/min), format check, MX check, usage logging; refactored with 3 extracted helpers: `resolveApiKey`, `checkRateLimit`, `logValidation`; response includes `duration_ms` |
 | `src/app/api/v1/usage/route.ts` | GET — session auth, summary counts from ALL logs, paginated rows |
 | `src/components/usage/StatCard.tsx` | 3px coloured left-border accent (teal/green/red), animated loading skeleton |
 | `src/components/usage/ActivityTable.tsx` | Table: domain (mono), valid/invalid badge, duration, timestamp; alternating rows |
